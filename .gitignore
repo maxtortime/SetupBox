@@ -55,3 +55,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Virtualenv directory
+venv/
+
+# Pycharm directory
+.idea/
+
+# SQLAlchemy migration directory
+migrations/
