@@ -10,11 +10,12 @@ CSRF_ENABLED = True
 # Define the application directory
 
 # for korean character
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 # Define the Database - MariaDB 10.1.7 on DigitalOcean cloud server
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://setupbox:tptdjqqkrtm@128.199.154.140/setupbox'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://setupbox:tptdjqqkrtm@fast2.ajou.ac.kr/setupbox'
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SECRET_KEY = 'super-secret'
 
@@ -27,6 +28,3 @@ UPLOAD_FOLDER = 'app/static/uploads/'
 # operations using the other.
 THREADS_PER_PAGE = 2
 CSRF_SESSION_KEY = "8f89068d65661cc47c7d4750e45b9891"
-
-# flask-security blueprint name
-SECURITY_BLUEPRINT_NAME = "setupbox"
