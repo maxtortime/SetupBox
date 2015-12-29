@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # index view
-from app import app
-from flask import render_template, request
-from flask_classy import FlaskView
+from flask import render_template, Blueprint
 from flask_security import http_auth_required
 
 '''
@@ -12,15 +10,19 @@ terminal 에서는 http -a <email:password> <URL> 입력할 것 (README 참고)
 ex) http -a maxtortime@gmail.com:123456 127.0.0.1:5000/foo
 '''
 
+MainPage = Blueprint('MainPage', __name__, template_folder='templates')
 
-@app.route('/foo')
+@MainPage.route('/authTest')
 @http_auth_required
-def foo():
+def authTest():
     return "LOGIN GOOD"
 
+@MainPage.route('/')
+def index():
+    return render_template('index.html')
 
-class IndexView(FlaskView):
-    route_base = '/'
+@MainPage.route('/info')
+def info():
+    return render_template('info.html')
 
-    def index(self):
-        return render_template('index.html')
+

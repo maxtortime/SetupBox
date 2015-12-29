@@ -28,3 +28,6 @@ UPLOAD_FOLDER = 'app/static/uploads/'
 # operations using the other.
 THREADS_PER_PAGE = 2
 CSRF_SESSION_KEY = "8f89068d65661cc47c7d4750e45b9891"
+
+SECURITY_REGISTERABLE = True
+SECURITY_CONFIRMABLE = False

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>SetupBox</title>
-</head>
-<body>
-<p>Hello World!</p>
-</body>
-</html>
+{% extends "base.html" %}
+{% block container %}
+    <div class="jumbotron">
+        <h1>SetupBox에 오신 것을 환영합니다!</h1>
+        <p>SetupBox는 오픈 소스 클라우드 스토리지 서비스입니다.</p>
+        <p><a class="btn btn-primary btn-lg" href="{{ url_for('MainPage.info') }}" role="button">더 알아보기</a></p>
+    </div>
+
+{% endblock %}
+
