@@ -26,3 +26,8 @@ def info():
     return render_template('info.html')
 
 
+@MainPage.route('/explorer')
+def explorer():
+    return render_template('explorer.html')
+
+
