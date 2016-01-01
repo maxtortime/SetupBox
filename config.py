@@ -1,20 +1,20 @@
 import sys
 
+import os
+
 # -*- coding: utf-8 -*-
 DEBUG = True # flask Debugging mode
+FILES_ROOT=os.path.dirname(os.path.expanduser('~/.setupbox/maxtortime@gmail.com/'))
 
 # Enable protection agains *Cross-site Request Forgery (CSRF)*
 WTF_CSRF_ENABLED = True
 CSRF_ENABLED = True
 
-# Define the application directory
-
 # for korean character
-
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-# Define the Database - MariaDB 10.1.7 on DigitalOcean cloud server
+# Database
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://setupbox:tptdjqqkrtm@fast2.ajou.ac.kr/setupbox'
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SECRET_KEY = 'super-secret'
