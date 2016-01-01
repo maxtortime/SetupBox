@@ -74,8 +74,10 @@ def explorer(path=''):
         my_file = File(FILES_ROOT, path)
         context = my_file.apply_action(View)
         folder = Folder(FILES_ROOT, my_file.get_path())
+
         if context == None:
             return render_template('file_unreadable.html', folder=folder)
+
         return render_template('file_view.html', text=context['text'], file=my_file, folder=folder)
 
 
@@ -87,14 +89,16 @@ def search():
 
 @app.route('/new_directory', methods=["POST"])
 @app.route('/<path:path>/new_directory', methods=["POST"])
-def create_directory(path = "/"):
+def create_directory(path = ''):
     dirname = request.form["new_directory_name"]
     directory_root = request.form["directory_root"]
     full_path = os.path.join(directory_root, dirname)
+    print full_path.replace('\\','/')
+
     try:
-        os.mkdir(full_path)
+        os.mkdir(os.path.join(FILES_ROOT,directory_root,dirname))
     except error:
-        pass
+        print error.args
     return redirect('/files/' + directory_root)
 
 if __name__ == '__main__':

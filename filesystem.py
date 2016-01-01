@@ -8,8 +8,8 @@ import string
 
 class Node(object):
     def __init__(self, root, path):
-        splitetPath = string.split(path,"/")
-        self.path = os.path.sep.join(splitetPath)
+        splitedPath = string.split(path,"/")
+        self.path = os.path.sep.join(splitedPath)
         self.root = root
         self._basename = basename(self.path)
 

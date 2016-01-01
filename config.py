@@ -4,7 +4,7 @@ import os
 
 # -*- coding: utf-8 -*-
 DEBUG = True # flask Debugging mode
-FILES_ROOT=os.path.dirname(os.path.expanduser('~/.setupbox/maxtortime@gmail.com/'))
+FILES_ROOT=os.path.dirname(os.path.abspath(os.path.expanduser('~/.setupbox/maxtortime@gmail.com')))
 
 # Enable protection agains *Cross-site Request Forgery (CSRF)*
 WTF_CSRF_ENABLED = True
