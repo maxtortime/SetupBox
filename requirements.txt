@@ -20,8 +20,6 @@ passlib==1.6.5
 PyMySQL==0.6.7
 python-editor==0.5
 Pygments==2.0.2
-PyMySQL==0.6.7
-python-editor==0.5
 requests==2.9.1
 SQLAlchemy==1.0.11
 Werkzeug==0.11.3
