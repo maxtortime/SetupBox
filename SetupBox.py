@@ -121,5 +121,22 @@ def upload_file():
         else:
             return flash('file_upload_failed')
 
+
+@app.route('/rename', methods=['POST'])
+def file_rename():
+    if request.method == "POST":
+        return 'rename'
+
+
+@app.route('/delete', methods=['POST'])
+def file_delete():
+    if request.method == 'POST':
+        path = request.form['path']
+        path_remove_filename = '\\'.join(str(path).split('\\')[:-1])
+        os.remove(os.path.join(FILES_ROOT,path))
+
+        return redirect(url_for('explorer', path=os.path.join(FILES_ROOT,path_remove_filename)))
+
+
 if __name__ == '__main__':
     app.run()

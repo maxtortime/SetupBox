@@ -12,10 +12,12 @@
 
     <!-- stylesheets -->
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.contextMenu.min.css') }}">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
@@ -23,9 +25,32 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
-    <script src="{{ url_for('static', filename='js/dropzone.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.contextMenu.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/jquery.ui.position.min.js') }}"></script>
 </head>
 <body>
+<script>
+    $(function() {
+        $.contextMenu({
+            selector: '.files',
+            callback: function(key, options) {
+                //var m = "clicked: " + key;
+                // window.console && console.log(m) || alert(m);
+
+                $.post('/'+key,{ path:$(this.context).attr('id') });
+            },
+            items: {
+                "rename": {name: "이름 바꾸기", icon: "rename"},
+                "delete": {name: "삭제하기", icon: "delete"}
+            }
+        });
+
+        $('.files').on('click', function(e){
+            console.log('clicked', this);
+        });
+    });
+</script>
 <div class="container">
     <nav class="navbar navbar-default">
         <div class="container-fluid">

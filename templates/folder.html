@@ -41,7 +41,7 @@
             <h3 class="page-header">Files:</h3>
             <ul class="nav nav-tabs nav-stacked">
                 {% for file in folder.files %}
-                    <li><a href="/files/{{ file.path }}"> <img src="{{ url_for('static',filename='img/'+ file.extension) }}.png" width="20" alt="icon"> {{ file.name }}</a></li>
+                    <li id="{{ file.path }}" class='files'><a href="/files/{{ file.path }}"> <img src="{{ url_for('static',filename='img/'+ file.extension) }}.png" width="20" alt="icon"> {{ file.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
