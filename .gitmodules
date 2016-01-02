@@ -1,0 +1,3 @@
+[submodule "SetupBox_Client"]
+	path = SetupBox_Client
+	url = git@github.com:Jungmo/SetupBox_Client.git
