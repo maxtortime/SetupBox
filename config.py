@@ -2,15 +2,19 @@ import sys
 
 import os
 
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 # -*- coding: utf-8 -*-
 DEBUG = True # flask Debugging mode
-FILES_ROOT=os.path.dirname(os.path.abspath(os.path.expanduser('~/.setupbox/maxtortime@gmail.com')))
+UPLOAD_FOLDER = FILES_ROOT = \
+    os.path.dirname(os.path.abspath(os.path.expanduser('~/.setupbox/maxtortime@gmail.com')))
 
 # Enable protection agains *Cross-site Request Forgery (CSRF)*
 WTF_CSRF_ENABLED = True
 CSRF_ENABLED = True
 
 # for korean character
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -18,9 +22,6 @@ sys.setdefaultencoding('utf-8')
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://setupbox:tptdjqqkrtm@fast2.ajou.ac.kr/setupbox'
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SECRET_KEY = 'super-secret'
-
-# UPLOAD_FOLDER
-UPLOAD_FOLDER = 'app/static/uploads/'
 
 # Application threads. A common general assumption is
 # using 2 per available processor cores - to handle

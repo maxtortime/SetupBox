@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from config import FILES_ROOT
+from config import FILES_ROOT, ALLOWED_EXTENSIONS
 from filesystem import *
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash, url_for
 from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
 from flask_security import http_auth_required, login_required
 from flask_sqlalchemy import SQLAlchemy
 from os import error
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config.from_object('config') # config import from config.py
@@ -92,14 +93,34 @@ def search():
 def create_directory(path = ''):
     dirname = request.form["new_directory_name"]
     directory_root = request.form["directory_root"]
-    full_path = os.path.join(directory_root, dirname)
-    print full_path.replace('\\','/')
 
     try:
         os.mkdir(os.path.join(FILES_ROOT,directory_root,dirname))
     except error:
         print error.args
     return redirect('/files/' + directory_root)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if request.method == "POST":
+        file = request.files['file']
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            directory_root = request.form['directory_root']
+            path = os.path.join(FILES_ROOT,directory_root,filename)
+
+            file.save(path)
+
+            return redirect(url_for('explorer', path=os.path.join(directory_root,filename)))
+        else:
+            return flash('file_upload_failed')
+
 
 if __name__ == '__main__':
     app.run()
