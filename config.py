@@ -1,6 +1,4 @@
-import sys
-
-import os
+import sys,os
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 

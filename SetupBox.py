@@ -43,7 +43,7 @@ security = Security(app, user_datastore)
 '''
 브라우저로 접속하면 로그인을 해야 한다는 alert 창이 뜸
 terminal 에서는 http -a <email:password> <URL> 입력할 것 (README 참고)
-ex) http -a maxtortime@gmail.com:123456 127.0.0.1:5000/foo
+ex) http -a maxtortime@gmail.com:123456 127.0.0.1:5000/authTest
 '''
 
 @app.route('/authTest')
@@ -120,7 +120,6 @@ def upload_file():
             return redirect(url_for('explorer', path=os.path.join(directory_root,filename)))
         else:
             return flash('file_upload_failed')
-
 
 if __name__ == '__main__':
     app.run()

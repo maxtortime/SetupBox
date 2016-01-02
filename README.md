@@ -16,5 +16,5 @@ Open source cloud storage service.
 ## 터미널에서 인증 테스트
 1. pip install httpie (위에서 requirements 를 설치했으면 이미 되 있음)
 2. http -a <email:password> <URL> 입력할 것 
-3. 예를 들어 http -a maxtortime@gmail.com:123456 127.0.0.1:5000/foo 라고 입력하면
+3. 예를 들어 http -a maxtortime@gmail.com:123456 127.0.0.1:5000/authTest 라고 입력하면
 4. LOGIN GOOD 이라 뜨면 정상
