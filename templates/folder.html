@@ -20,14 +20,16 @@
         <div class="span6">
             <h3 class="page-header">Folders:</h3>
             <form action="{{ url_for('create_directory') }}" method="post">
+                <label> 디렉토리 이름을 입력하세요
                 <input type="text" name="new_directory_name">
-                <input type="submit" value="Create directory">
+                </label>
+                <input class='btn btn-primary' type="submit" value="Create directory">
                 <input id="folder_path" type="hidden" value="{{folder.path}}" name="directory_root">
             </form>
 
-            <form action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
+            <form style='display:-webkit-box;' action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
                 <input type=file name=file>
-                <input type=submit value=Upload>
+                <input class='btn btn-info' type=submit value=Upload>
                 <input type="hidden" name='directory_root' value="{{folder.path}}" name="directory_root">
             </form>
 

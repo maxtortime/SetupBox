@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from config import FILES_ROOT, ALLOWED_EXTENSIONS
 from filesystem import *
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
 from flask_security import http_auth_required, login_required
 from flask_sqlalchemy import SQLAlchemy
