@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from config import FILES_ROOT, ALLOWED_EXTENSIONS
+from config import FILES_ROOT
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from os import error
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
+app = Flask(__name__) # init flask app
 app.config.from_object('config') # config import from config.py
 
 # Define the DB
@@ -20,12 +20,14 @@ roles_users = db.Table('roles_users',
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
 
+# Role table
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
 
+# User's table
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True)
@@ -46,12 +48,14 @@ terminal 에서는 http -a <email:password> <URL> 입력할 것 (README 참고)
 ex) http -a maxtortime@gmail.com:123456 127.0.0.1:5000/authTest
 '''
 
+# for linux client auth
 @app.route('/authTest')
 @http_auth_required
 def authTest():
     return "LOGIN GOOD"
 
 
+# index view
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -67,6 +71,7 @@ def info():
 @login_required
 def explorer(path=''):
     path_join = os.path.join(FILES_ROOT, path)
+
     if os.path.isdir(path_join):
         folder = Folder(FILES_ROOT, path)
         folder.read()
@@ -103,9 +108,11 @@ def create_directory(path = ''):
     return redirect('/files/' + directory_root)
 
 
+"""
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+"""
 
 @app.route('/upload', methods=['POST'])
 @login_required
@@ -113,7 +120,7 @@ def upload_file():
     if request.method == "POST":
         file = request.files['file']
 
-        if file and allowed_file(file.filename):
+        if file:
             filename = secure_filename(file.filename)
             directory_root = request.form['directory_root']
             path = os.path.join(FILES_ROOT,directory_root,filename)

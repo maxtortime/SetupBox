@@ -1,9 +1,7 @@
+# -*- coding: utf-8 -*-
 import sys,os
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-
-# -*- coding: utf-8 -*-
-DEBUG = True # flask Debugging mode
+DEBUG = False # flask Debugging mode
 UPLOAD_FOLDER = FILES_ROOT = \
     os.path.dirname(os.path.abspath(os.path.expanduser('~/.setupbox/maxtortime@gmail.com')))
 
