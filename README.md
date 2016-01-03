@@ -29,4 +29,7 @@ $ source venv/bin/activate
 ![Image of explorer1](http://i.imgur.com/gI1pOJh.png)
 
 * Explorer 2
-![Image of explorer2](http://i.imgur.com/YioF5lF.png) 
+![Image of explorer2](http://i.imgur.com/YioF5lF.png)
+
+파일을 클릭하여 삭제할 수 있고, 새로운 디렉토리를 생성할 수 있습니다.
+파일을 업로드할 수 있습니다.
