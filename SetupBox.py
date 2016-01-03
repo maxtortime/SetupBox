@@ -83,6 +83,7 @@ def explorer(path=''):
 
 
 @app.route('/search', methods=['POST'])
+@login_required
 def search():
     q = request.form['q']
     return render_template('search.html', request = q)
@@ -90,6 +91,7 @@ def search():
 
 @app.route('/new_directory', methods=["POST"])
 @app.route('/<path:path>/new_directory', methods=["POST"])
+@login_required
 def create_directory(path = ''):
     dirname = request.form["new_directory_name"]
     directory_root = request.form["directory_root"]
@@ -106,6 +108,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route('/upload', methods=['POST'])
+@login_required
 def upload_file():
     if request.method == "POST":
         file = request.files['file']
@@ -119,23 +122,26 @@ def upload_file():
 
             return redirect(url_for('explorer', path=os.path.join(directory_root,filename)))
         else:
-            return flash('file_upload_failed')
+            return 'FILE UPLOAD FAILED'
 
 
 @app.route('/rename', methods=['POST'])
+@login_required
 def file_rename():
     if request.method == "POST":
         return 'rename'
 
 
 @app.route('/delete', methods=['POST'])
+@login_required
 def file_delete():
     if request.method == 'POST':
         path = request.form['path']
-        path_remove_filename = '\\'.join(str(path).split('\\')[:-1])
+        directory_root = request.form['directory_root']
+
         os.remove(os.path.join(FILES_ROOT,path))
 
-        return redirect(url_for('explorer', path=os.path.join(FILES_ROOT,path_remove_filename)))
+        return redirect('/files'+ directory_root)
 
 
 if __name__ == '__main__':

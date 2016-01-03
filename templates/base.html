@@ -38,7 +38,8 @@
                 //var m = "clicked: " + key;
                 // window.console && console.log(m) || alert(m);
 
-                $.post('/'+key,{ path:$(this.context).attr('id') });
+                $.post('/'+key,{ path:$(this.context).attr('id'),
+                    directory_root:$("#folder_path").val() });
             },
             items: {
                 "rename": {name: "이름 바꾸기", icon: "rename"},
