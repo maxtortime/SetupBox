@@ -7,6 +7,9 @@ SetupBox는 간단한 설치만으로 사용자에게 편리한 스토리지 클
 
 작은 스타트업, 연구실, 가정의 중앙 서버에 저장하여 쉽게 사용하세요.
 
+## Youtube 링크
+https://youtu.be/IGdJ-qq6d-w
+
 ## Slideshare 링크
 http://www.slideshare.net/jainersoer/introduction-to-setupbox
 
