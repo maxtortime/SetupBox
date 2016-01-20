@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
-from config import FILES_ROOT
+"""
+TODO:
+1. 서버가 돌 때 ~/.setupbox 디렉토리가 있나 체크하고 없으면 만들기 --> 완료
+2. 회원가입시 .setupbox 디렉토리 밑에 유저의 이메일로 된 디렉토리 만들기
+"""
+#from config import FILES_ROOT
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
-from flask_security import http_auth_required, login_required
+from flask_security import http_auth_required, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from os import error
 from werkzeug.utils import secure_filename
@@ -48,6 +53,15 @@ terminal 에서는 http -a <email:password> <URL> 입력할 것 (README 참고)
 ex) http -a maxtortime@gmail.com:123456 127.0.0.1:5000/authTest
 '''
 
+# .setupbox 디렉토리가 없으면 만들 것
+@app.before_first_request
+def make_dir():
+    # 유저들의 파일이 담길 폴더 경로
+    app_path = os.path.expanduser('~/.setupbox')
+
+    if not os.path.exists(app_path):
+        os.mkdir(app_path)
+
 # for linux client auth
 @app.route('/authTest')
 @http_auth_required
@@ -70,6 +84,17 @@ def info():
 @app.route('/files/<path:path>')
 @login_required
 def explorer(path=''):
+    # 유저의 파일을 담는 루트 디렉토리를 정의
+
+    app.config.update(FILES_ROOT = os.path.join(os.path.dirname(os.path.abspath(os.path.expanduser('~/.setupbox/'))),current_user.email))
+
+    FILES_ROOT = app.config['FILES_ROOT']
+    print "FILES_ROOT: " + FILES_ROOT
+    # 회원가입된 유저의 이메일로된 디렉토리가 존재하지 않으면 그 디렉토리를 만든다 
+    if not os.path.exists(FILES_ROOT):
+        os.mkdir(FILES_ROOT)
+
+    # 받아온 경로와 원래 경로를 합침
     path_join = os.path.join(FILES_ROOT, path)
 
     if os.path.isdir(path_join):
@@ -100,6 +125,7 @@ def search():
 def create_directory(path = ''):
     dirname = request.form["new_directory_name"]
     directory_root = request.form["directory_root"]
+    FILES_ROOT = app.config['FILES_ROOT']
 
     try:
         os.mkdir(os.path.join(FILES_ROOT,directory_root,dirname))
@@ -108,6 +134,7 @@ def create_directory(path = ''):
     return redirect('/files/' + directory_root)
 
 
+# 현재는 모든 확장자를 업로드할 수 있음.
 """
 def allowed_file(filename):
     return '.' in filename and \
@@ -117,6 +144,8 @@ def allowed_file(filename):
 @app.route('/upload', methods=['POST'])
 @login_required
 def upload_file():
+    FILES_ROOT = app.config['FILES_ROOT']
+
     if request.method == "POST":
         file = request.files['file']
 
@@ -142,6 +171,8 @@ def file_rename():
 @app.route('/delete', methods=['POST'])
 @login_required
 def file_delete():
+    FILES_ROOT = app.config['FILES_ROOT']
+
     if request.method == 'POST':
         path = request.form['path']
         directory_root = request.form['directory_root']
