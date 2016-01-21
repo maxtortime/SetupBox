@@ -8,6 +8,7 @@ TODO:
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
+from flask.ext.bower import Bower
 from flask_security import http_auth_required, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from os import error
@@ -15,6 +16,9 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__) # init flask app
 app.config.from_object('config') # config import from config.py
+
+# Define the flask-bower
+bower = Bower(app)
 
 # Define the DB
 db = SQLAlchemy(app)
@@ -84,13 +88,12 @@ def info():
 @app.route('/files/<path:path>')
 @login_required
 def explorer(path=''):
-    # 유저의 파일을 담는 루트 디렉토리를 정의
-
-    app.config.update(FILES_ROOT = os.path.join(os.path.dirname(os.path.abspath(os.path.expanduser('~/.setupbox/'))),current_user.email))
+    # 유저의 파일을 담는 루트 디렉토리를 정의   
+    app.config.update(FILES_ROOT = os.path.join(os.path.expanduser('~/.setupbox/'),current_user.email))
 
     FILES_ROOT = app.config['FILES_ROOT']
-    print "FILES_ROOT: " + FILES_ROOT
-    # 회원가입된 유저의 이메일로된 디렉토리가 존재하지 않으면 그 디렉토리를 만든다 
+
+    # 회원가입된 유저의 이메일로된 디렉토리가 존재하지 않으면 그 디렉토리를 만든다
     if not os.path.exists(FILES_ROOT):
         os.mkdir(FILES_ROOT)
 
@@ -131,6 +134,8 @@ def create_directory(path = ''):
         os.mkdir(os.path.join(FILES_ROOT,directory_root,dirname))
     except error:
         print error.args
+
+    print directory_root
     return redirect('/files/' + directory_root)
 
 
