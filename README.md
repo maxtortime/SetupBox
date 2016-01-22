@@ -16,8 +16,8 @@ https://youtu.be/IGdJ-qq6d-w
 http://www.slideshare.net/jainersoer/introduction-to-setupbox
 
 ## 구성
-* SetupBox : Flask Web Server
-* SetupBox_client : Linux client
+* SetupBox : Angular.js, Express.js, Flask
+* SetupBox_client : Linux client, SVN C API, FUSE
 
 ## How to run server
 * virtualenv와 각종 패키지를 설치하세요.
