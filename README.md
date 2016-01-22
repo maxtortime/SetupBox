@@ -7,6 +7,8 @@ SetupBox는 간단한 설치만으로 사용자에게 편리한 스토리지 클
 
 작은 스타트업, 연구실, 가정의 중앙 서버에 저장하여 쉽게 사용하세요.
 
+쉬운 설치, 쉬운 공유, 쉬운 버전 컨트롤!
+
 ## Youtube 링크
 https://youtu.be/IGdJ-qq6d-w
 
@@ -14,8 +16,8 @@ https://youtu.be/IGdJ-qq6d-w
 http://www.slideshare.net/jainersoer/introduction-to-setupbox
 
 ## 구성
-* SetupBox : Flask Web Server
-* SetupBox_client : Linux client
+* SetupBox : Angular.js, Express.js, Flask
+* SetupBox_client : Linux client, SVN C API, FUSE
 
 ## How to run server
 * virtualenv와 각종 패키지를 설치하세요.
