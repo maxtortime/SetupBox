@@ -1,0 +1,28 @@
+{
+  "name": "SetupBox",
+  "homepage": "http://maxtortime.github.io/SetupBox",
+  "authors": [
+    "Taehwan Kim <maxtortime@gmail.com>"
+  ],
+  "description": "Open source cloud storage service.",
+  "main": "SetupBox.py",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "python"
+  ],
+  "license": "AGPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "jquery": "~2.2.0",
+    "jQuery-contextMenu": "~2.1.0"
+  }
+}
