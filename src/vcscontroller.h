@@ -29,7 +29,12 @@ error_code_t sb_commit();
  * @todo: please add a comment like this to all functions.
  */
 error_code_t sb_add(const char* target);
-
+/*
+ * @author: Jaewon Choi, Jungmo Ahn
+ * @param: const char* target
+ * 	It's Okay whether target is a file or directory.
+ * @todo: please add a comment like this to all functions.
+ */
 error_code_t sb_remove(const char* target);
 
 #endif // vcscontroller_h
