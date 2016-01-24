@@ -6,8 +6,8 @@
  * 			Jungmo Ahn	<ajm100@ajou.ac.kr>
  */
  
-#include "vsccontroller.h"
+#include "vcscontroller.h"
 
 static struct 
 {
-}_sb_vsc_context;
+}_sb_vcs_context;
