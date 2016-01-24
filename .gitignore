@@ -64,3 +64,4 @@ venv/
 
 # SQLAlchemy migration directory
 migrations/
+*.swp
