@@ -12,22 +12,20 @@
 
     <!-- stylesheets -->
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('bower.static', filename='bootstrap/dist/css/bootstrap.min.css') }}">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('bower.static', filename='bootstrap/dist/css/bootstrap-theme.min.css') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.contextMenu.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.contextMenu.min.css') }}">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.js') }}"></script>
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-
-    <script src="{{ url_for('static', filename='js/jquery.contextMenu.min.js') }}"></script>
-
-    <script src="{{ url_for('static', filename='js/jquery.ui.position.min.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.contextMenu.min.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.ui.position.min.js') }}"></script>
 </head>
 <body>
 <script>

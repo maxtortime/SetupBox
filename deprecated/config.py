@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys,os
 
-DEBUG = False # flask Debugging mode
-UPLOAD_FOLDER = FILES_ROOT = \
-    os.path.dirname(os.path.abspath(os.path.expanduser('~/.setupbox/maxtortime@gmail.com')))
+DEBUG = True # flask Debugging mode
+# UPLOAD_FOLDER = FILES_ROOT = os.path.dirname(os.path.abspath(os.path.expanduser('~/.setupbox/')))
 
 # Enable protection agains *Cross-site Request Forgery (CSRF)*
 WTF_CSRF_ENABLED = True
