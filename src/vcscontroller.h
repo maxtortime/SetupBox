@@ -11,7 +11,11 @@
 
 enum VCS { VCS_GIT, VCS_COUNT };
 
-typedef int error_code_t;
+typedef enum _error_code_t
+{
+	SB_ERR_NONE,
+	SB_ERR_COUNT
+} error_code_t;
 
 error_code_t sb_init(enum VCS vcs, const char* dir);
 
