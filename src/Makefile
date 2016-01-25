@@ -10,3 +10,6 @@ all: $(OBJ)
 
 $(OBJ): $(SRC)
 	$(CC) -c $(SRC)
+
+clean:
+	rm *.o
