@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+#lib/
 lib64/
 parts/
 sdist/
@@ -63,8 +63,5 @@ venv/
 .idea/
 
 # SQLAlchemy migration directory
-migrations/
 
-# bower components
-bower_components/
-
+*.swp
