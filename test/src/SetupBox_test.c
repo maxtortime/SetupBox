@@ -38,61 +38,61 @@ int clean_suite(void)
 /*
  * Testing sb_init(enum VCS vcs, const char* dir)
  * @author: Jungmo Ahn
- * @todo: write test code
+ * @todo: write test code and error code
  */
 void testINIT(void)
 {
-	CU_ASSERT(sb_init(0, DIR));	
+	CU_ASSERT(sb_init(0, DIR) == SB_ERR_NONE);	
 }
 
 /*
  * Testing sb_destroy()
  * @author: Jungmo Ahn
- * @todo: write test code.
+ * @todo: write test code and error code.
  */
 void testDESTROY(void)
 {
-	CU_ASSERT(sb_destory());
+	CU_ASSERT(sb_destory() == SB_ERR_NONE);
 }
 
 /*
  * Testing sb_update()
  * @author: Jungmo Ahn
- * @todo: write test code.
+ * @todo: write test code and error code.
  */
 void testUPDATE(void)
 {
-	CU_ASSERT(sb_update());
+	CU_ASSERT(sb_update() == SB_ERR_NONE);
 }
 
 /*
  * Testing sb_commit()
  * @author: Jungmo Ahn
- * @todo: write test code.
+ * @todo: write test code add error code.
  */
 void testCOMMIT(void)
 {
-	CU_ASSERT(sb_commit());
+	CU_ASSERT(sb_commit() == SB_ERR_NONE);
 }
 
 /*
  * Testing sb_add()
  * @author: Jungmo Ahn
- * @todo: write test code.
+ * @todo: write test code, add error code.
  */
 void testADD(void)
 {
-	CU_ASSERT(sb_ad());
+	CU_ASSERT(sb_add() == SB_ERR_NONE);
 }
 
 /*
  * Testing sb_remove()
  * @author: Jungmo Ahn
- * @todo: write test code.
+ * @todo: write test code, add error code.
  */
 void testREMOVE(void)
 {
-	CU_ASSERT(sb_remove());
+	CU_ASSERT(sb_remove() == SB_ERR_NONE);
 }
 
 /*
@@ -102,26 +102,27 @@ void testREMOVE(void)
  */
 int main()
 {
-	CU_pSuite pSuite = NULL;
+	CU_pSuite pSuite= NULL;
 
 	// Initiailze the CUnit test registry.
-	if(CUE_SUCCESS != CU_initialize_registry())
+	if (CUE_SUCCESS != CU_initialize_registry()) {
 		return CU_get_error();
+	}
 	
 	// Add a suite to the registry.
 	pSuite = CU_add_suite("Suite", init_suite, clean_suite);
 	
-	if(NULL = pSuite) {
+	if (NULL = pSuite) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	// Add the test to the suite.
-	// TODO: Consider an order of functions after adding OTHER functions.
+	// Consider an order of functions after adding OTHER functions.
 	if ((NULL == CU_add_test(pSuite, "test of sb_init()", testINIT))) {
 		CU_cleanup_registry();
 		return CU_get_error();
-	}
+	} /* Add the test to the suite. */
+ 
 
 	CU_basic_set_mode(CU_BRM_VERBOSE);
 	CU_basic_run_tests();
