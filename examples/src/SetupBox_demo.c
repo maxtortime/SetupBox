@@ -11,8 +11,12 @@
 #include <string.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define THREAD
+
+//XXX: Need to talk about a length of username
+char username[32];
 
 #ifndef THREAD
 
@@ -45,7 +49,8 @@ enum _error_code_t do_sb_init(enum VCS vcs, const char* dir)
 	enum _error_code_t ret = SB_ERR_NONE;
 	int check_json = 0;
 	ret  = sb_init(vcs, dir);
-	
+
+	getlogin_r(username, 32);
 	// if there is an error,
 	if(ret != SB_ERR_NONE) {
 		//Do something for handilng an error
@@ -61,25 +66,19 @@ enum _error_code_t do_sb_init(enum VCS vcs, const char* dir)
 int main(int argc, char** argv)
 {
 	int vcs = 1;
-	char* dir = "af";
-
+	char dir[BUFSIZ];
 	enum _error_code_t ret = SB_ERR_NONE;
-	ret = do_sb_init(vcs, dir);
 
+	sprintf(dir, "/Users/%s/.SetupBox",username);
+	
+	ret = do_sb_init(vcs, dir);
+	
 	// if there is an error, terminate SetupBox
-	if(ret != SB_ERR_NONE)
-	{
+	if(ret != SB_ERR_NONE) {
 		printf("error occurs at sb_init()");
 		exit(15);
 	}
 	
-	while(1)
-	{
-		sb_update();
-		sb_commit();
-	}
-
 	return 0;
 
 }
-
