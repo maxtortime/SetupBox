@@ -13,30 +13,41 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define THREAD
+#define THREAD_UPDATE 0
+#define THREAD_COMMIT 1
+#define THREAD_TOTAL 2
 
-//XXX: Need to talk about a length of username
-char username[32];
+char dir[256];
 
-#ifndef THREAD
-
-int thread_id;
-pthread_t thread;
+int thread_id[THREAD_TOTAL];
+pthread_t thread[THREAD_TOTAL];
 
 /*
  * Initialize a thread for running sb_update()
  * @author: Jungmo Ahn
  * @return: return 0 on success, non-zero otherwise.
- * @todo: to specify what parameter is needed for sb_update
+ * @todo: Specifying what parameter is needed for sb_update
  *        now, it sets NULL(fourth parameter).
  */
 enum _error_code_t do_sb_update()
 {
 	// enum _error_code_t ret;
-	thread_id = pthread_create(&thread, NULL, sb_update, NULL);
+	thread_id[THREAD_UPDATE] = pthread_create(&thread_id[THREAD_UPDATE], NULL, sb_update, NULL);
 }
 
-#endif //THREAD
+/*
+ * Initialize a thread for running sb_commit()
+ * @author: Jungmo Ahn
+ * @return: return 0 on success, non-zero otherwise.
+ * @todo: Specifying what parameter is needed for sb_update
+ * 	  now, it sets NULL(fourth parameter).
+ */
+
+enum _error_code_t do_sb_commit()
+{
+	thread_id[THREAD_COMMIT] = pthread_create(&thread[THREAD_COMMIT], NULL, sb_commit, NULL);
+}
+
 
 /*
  * Do sb_init()
@@ -49,8 +60,9 @@ enum _error_code_t do_sb_init(enum VCS vcs, const char* dir)
 	enum _error_code_t ret = SB_ERR_NONE;
 	int check_json = 0;
 	ret  = sb_init(vcs, dir);
-
-	getlogin_r(username, 32);
+	
+	sprintf(dir, "%s/.SetupBox",getenv("HOME"));
+	
 	// if there is an error,
 	if(ret != SB_ERR_NONE) {
 		//Do something for handilng an error
@@ -63,22 +75,43 @@ enum _error_code_t do_sb_init(enum VCS vcs, const char* dir)
 	return ret;
 }
 
+void showerror(enum _error_code_t ret)
+{
+	// if there is an error, terminate SetupBox
+	printf("error occurs. error code : %d\n", ret);
+	exit(15);
+}
+
 int main(int argc, char** argv)
 {
 	int vcs = 1;
-	char dir[BUFSIZ];
 	enum _error_code_t ret = SB_ERR_NONE;
 
-	sprintf(dir, "/Users/%s/.SetupBox",username);
-	
+
 	ret = do_sb_init(vcs, dir);
-	
-	// if there is an error, terminate SetupBox
 	if(ret != SB_ERR_NONE) {
-		printf("error occurs at sb_init()");
-		exit(15);
+		showerror(ret);
+	}	
+	
+	ret = do_sb_update();
+	if(ret != SB_ERR_NONE) {
+		showerror(ret);
 	}
 	
+	ret = do_sb_add();
+	if(ret != SB_ERR_NONE) {
+		showerror(ret);
+	}
+	
+	ret = do_sb_remove();
+	if(ret != SB_ERR_NONE) {	
+		showerror(ret);
+	}	
+
+	ret = do_sb_commit();
+	if(ret != SB_ERR_NONE) {
+		showerror(ret);
+	}	
 	return 0;
 
 }
