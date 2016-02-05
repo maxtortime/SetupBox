@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define THREAD_UPDATE	 0
-#define THREAD_COMMIT	 1
+#define THREAD_COMMIT	 0
+#define THREAD_UPDATE	 1
 #define THREAD_TOTAL	 2
 
 char		dir[256];
@@ -55,9 +55,10 @@ int create_threads()
 {
 	int i = 0;
 	int ret = 0;
-	thread_id[THREAD_COMMIT] = pthread_create(&thread_id[THREAD_COMMIT], NULL, sb_commit, NULL);
-	thread_id[THREAD_UPDATE] = pthread_create(&thread_id[THREAD_UPDATE], NULL, sb_update, NULL);
-	
+	thread_id[THREAD_COMMIT] = pthread_create(&thread_id[THREAD_COMMIT], NULL, do_sb_commit, NULL);
+	thread_id[THREAD_UPDATE] = pthread_create(&thread_id[THREAD_UPDATE], NULL, do_sb_update, NULL);
+
+	//check error at thread
 	for(i = 0; i < THREAD_TOTAL; i++) {
 		if(thread_id[i] == 0) {
 			return -1;
@@ -90,6 +91,7 @@ enum _error_code_t do_sb_init(enum VCS vcs, const char* dir)
 	enum _error_code_t ret = SB_ERR_NONE;
 	int check_json = 0;
 	ret  = sb_init(vcs, dir);
+	
 	// if there is an error,
 	if(ret != SB_ERR_NONE) {
 		//Do something for handilng an error
@@ -106,12 +108,25 @@ enum _error_code_t do_sb_init(enum VCS vcs, const char* dir)
  * Do sb_destory()
  * @author: Jungmo Ahn
  */
-enum _error_code_t do_sb_destroy()
+void do_sb_destroy()
 {
-	enum _error_code_t ret = SB_ERR_NONE;
+	enum _error_code_t	ret = SB_ERR_NONE;
+	int			status = 0;
 
-	//release mutex
-	pthread_mutex_destroy(&mutex);
+	//terminate all thread
+	pthread_kill(&thread[THREAD_COMMIT],15);
+	pthread_kill(&thread[THREAD_UPDATE], 15);
+
+	//release mutex, if mutex is busy, wait 1s.
+	do {
+		status = pthread_mutex_destroy(&mutex);
+		if(status == 0) {
+			break;
+		}
+		else {
+			sleep(1);
+		}
+	} while(1);
 
 	ret = sb_destroy();
 	
@@ -121,14 +136,16 @@ enum _error_code_t do_sb_destroy()
 	
 	exit(SIGTERM);
 }
+
 /*
  * Do sb_commit()
  * @author: Jungmo Ahn
+ * @todo: parameter
  */
 enum _error_code_t do_sb_commit()
 {
 	enum _error_code_t ret;
-
+	
 	while(1) {
 		pthread_mutex_lock(&mutex);
 		ret = sb_commit();
@@ -139,10 +156,11 @@ enum _error_code_t do_sb_commit()
 		sleep(5);
 	}
 }
+
 /* Do sb_update()
  * @author: Jungmo Ahn
+ * @todo: parameter
  */
-
 enum _error_code_t do_sb_update()
 {
 	enum _error_code_t ret;
@@ -163,24 +181,36 @@ int main(int argc, char** argv)
 	int			vcs = 1;
 	enum _error_code_t	ret = SB_ERR_NONE;
 	int			status = 0;
-
+	int			isadd = 0;
+	int			isremove = 0;
+	
 	ret = do_sb_init(vcs, dir);
 	if(ret != SB_ERR_NONE) {
 		printerror(ret);
 	}	
 
-	//TODO:modify parameters of add, remove
-	ret = sb_add(dir);
-	if(ret != SB_ERR_NONE) {
-		printerror(ret);
-	}
-	
-	ret = sb_remove(dir);
-	if(ret != SB_ERR_NONE) {	
-		printerror(ret);
-	}	
+	create_threads();
 
 	pthread_join(thread_id[THREAD_COMMIT], (void *) &status);
 	pthread_join(thread_id[THREAD_UPDATE], (void *) &status);
+	
+	//TODO:transaction module, parameter
+	while(1)
+	{
+		if(isadd == 1) {
+			ret = sb_add(dir);
+			if(ret != SB_ERR_NONE) {
+				printerror(ret);
+			}
+			isadd = 0;
+		}
+		if(isremove == 1) {	
+			ret = sb_remove(dir);
+			if(ret != SB_ERR_NONE) {	
+				printerror(ret);
+			}
+		}
+	}
+
 	return 0;
 }
