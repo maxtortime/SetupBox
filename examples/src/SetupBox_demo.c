@@ -22,50 +22,58 @@ int		thread_id[THREAD_TOTAL];
 pthread_t	thread[THREAD_TOTAL];
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-/*
- * Initiailize SetupBox - Set dir path and signal
+//TODO: parameter
+enum _error_code_t	do_sb_init(enum VCS vcs, const char* dir);
+void			do_sb_destory();
+void*			do_sb_commit();
+void*			do_sb_update();
+
+int			init();
+int			create_threads();
+void			printerror(enum _error_code_t ret);
+
+/* main function of SetupBox
+ *
  * @author: Jungmo Ahn
- * @return: return 0 on success, non-zero otherwise.
- * @todo:
+ * @return: return 0 on success, otherwise error code.
+ * @todo: apply transaction layer for sb_add, sb_remove
  */
-int init()
+int main(int argc, char** argv)
 {
-	int ret;
+	int			vcs = 1;  //set temporary vcs type
+	int			status = 0;
+	int			isadd = 0;
+	int			isremove = 0;
+	enum _error_code_t	ret = SB_ERR_NONE;
+	
+	ret = do_sb_init(vcs, dir);
+	if(ret != SB_ERR_NONE) {
+		printerror(ret);
+	}	
 
-	//if SetupBox is killed by user, call do_sb_destroy
-	signal(SIGTERM, do_sb_destroy);
-	ret = sprintf(dir, "%s/.SetupBox",getenv("HOME"));
+	create_threads();
 
-	if ( ret <= 0 ) {
-		return -1; 
-	}
-	else {
-		return 0;
-	}
-}
-
-/*
- * Create threads.
- * @author: Jungmo Ahn
- * @return: return 0 on success, non-zero otherwise.
- * @todo: Specifying what parameters are needed for sb_update
- * 	  now, these set NULL(fourth parameter).
- */
-int create_threads()
-{
-	int i = 0;
-	int ret = 0;
-	thread_id[THREAD_COMMIT] = pthread_create(&thread_id[THREAD_COMMIT], NULL, do_sb_commit, NULL);
-	thread_id[THREAD_UPDATE] = pthread_create(&thread_id[THREAD_UPDATE], NULL, do_sb_update, NULL);
-
-	//check error at thread
-	for(i = 0; i < THREAD_TOTAL; i++) {
-		if(thread_id[i] == 0) {
-			return -1;
+	//TODO:transaction module, parameter
+	while(1)
+	{
+		if(isadd == 1) {
+			ret = sb_add(dir);
+			if(ret != SB_ERR_NONE) {
+				printerror(ret);
+				return ret;
+			}
+			isadd = 0;
+		}
+		if(isremove == 1) {	
+			ret = sb_remove(dir);
+			if(ret != SB_ERR_NONE) {	
+				printerror(ret);
+				return ret;
+			}
 		}
 	}
 
-	return 0;
+	return ret;
 }
 
 /*
@@ -114,8 +122,8 @@ void do_sb_destroy()
 	int			status = 0;
 
 	//terminate all thread
-	pthread_kill(&thread[THREAD_COMMIT],15);
-	pthread_kill(&thread[THREAD_UPDATE], 15);
+	pthread_kill(thread[THREAD_COMMIT],15);
+	pthread_kill(thread[THREAD_UPDATE], 15);
 
 	//release mutex, if mutex is busy, wait 1s.
 	do {
@@ -140,9 +148,9 @@ void do_sb_destroy()
 /*
  * Do sb_commit()
  * @author: Jungmo Ahn
- * @todo: parameter
+ * @todo: parameter, cycle
  */
-enum _error_code_t do_sb_commit()
+void* do_sb_commit()
 {
 	enum _error_code_t ret;
 	
@@ -150,7 +158,8 @@ enum _error_code_t do_sb_commit()
 		pthread_mutex_lock(&mutex);
 		ret = sb_commit();
 		if(ret != SB_ERR_NONE) {
-			printerror();
+			printerror(ret);
+			return;
 		}
 		pthread_mutex_unlock(&mutex);
 		sleep(5);
@@ -159,9 +168,9 @@ enum _error_code_t do_sb_commit()
 
 /* Do sb_update()
  * @author: Jungmo Ahn
- * @todo: parameter
+ * @todo: parameter, cycle
  */
-enum _error_code_t do_sb_update()
+void* do_sb_update()
 {
 	enum _error_code_t ret;
 
@@ -169,48 +178,57 @@ enum _error_code_t do_sb_update()
 		pthread_mutex_lock(&mutex);
 		ret = sb_update();
 		if(ret != SB_ERR_NONE) {
-			printerror();
+			printerror(ret);
+			return;
 		}
 		pthread_mutex_unlock(&mutex);
 		sleep(5);
 	}
 }
 
-int main(int argc, char** argv)
+
+/*
+ * Create threads.
+ * @author: Jungmo Ahn
+ * @return: return 0 on success, non-zero otherwise.
+ * @todo: Specifying what parameters are needed for sb_update
+ * 	  now, these set NULL(fourth parameter).
+ */
+int create_threads()
 {
-	int			vcs = 1;
-	enum _error_code_t	ret = SB_ERR_NONE;
-	int			status = 0;
-	int			isadd = 0;
-	int			isremove = 0;
-	
-	ret = do_sb_init(vcs, dir);
-	if(ret != SB_ERR_NONE) {
-		printerror(ret);
-	}	
+	int i = 0;
+	int ret = 0;
+	thread_id[THREAD_COMMIT] = pthread_create(&thread[THREAD_COMMIT], NULL, do_sb_commit, NULL);
+	thread_id[THREAD_UPDATE] = pthread_create(&thread[THREAD_UPDATE], NULL, do_sb_update, NULL);
 
-	create_threads();
-
-	pthread_join(thread_id[THREAD_COMMIT], (void *) &status);
-	pthread_join(thread_id[THREAD_UPDATE], (void *) &status);
-	
-	//TODO:transaction module, parameter
-	while(1)
-	{
-		if(isadd == 1) {
-			ret = sb_add(dir);
-			if(ret != SB_ERR_NONE) {
-				printerror(ret);
-			}
-			isadd = 0;
-		}
-		if(isremove == 1) {	
-			ret = sb_remove(dir);
-			if(ret != SB_ERR_NONE) {	
-				printerror(ret);
-			}
+	//check error at thread
+	for(i = 0; i < THREAD_TOTAL; i++) {
+		if(thread_id[i] == 0) {
+			return -1;
 		}
 	}
 
 	return 0;
+}
+
+/*
+ * Initiailize SetupBox - Set dir path and signal
+ * @author: Jungmo Ahn
+ * @return: return 0 on success, non-zero otherwise.
+ * @todo:
+ */
+int init()
+{
+	int ret;
+
+	//if SetupBox is killed by user, call do_sb_destroy
+	signal(SIGTERM, do_sb_destroy);
+	ret = sprintf(dir, "%s/.SetupBox",getenv("HOME"));
+
+	if ( ret <= 0 ) {
+		return -1; 
+	}
+	else {
+		return 0;
+	}
 }
