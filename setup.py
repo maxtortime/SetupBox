@@ -13,6 +13,6 @@ setup(name='setupbox',
         license="GPLv2",
         packages=['setupbox'],
         install_requires=[
-            'pygit2',
+            'gitpython'
             ],
         zip_safe=False)

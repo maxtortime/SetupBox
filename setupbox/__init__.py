@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta, abstractmethod
+from git import Repo
+
 
 class VcsCore:
     __metaclass__ = ABCMeta
@@ -16,11 +18,25 @@ class VcsCore:
     def commit(self, msg):
         pass
 
-class VcsCoreSvn(object):
+
+class VcsCoreGit(VcsCore):
     def __init__(self, repo_dir):
+        self.repo = Repo.init(repo_dir)
+
+    def __del__(self):
         pass
 
+    def update(self):
+        git = self.repo.git
 
+    def commit(self, msg):
+        git = self.repo.git
+        git.add('.')
+        git.commit(msg)
+        #git.push()
 
+    def add(self, filename):
+        git = self.repo.git
+        git.add(filename)
 
-VcsCore.register(VcsCoreSvn)
+VcsCore.register(VcsCoreGit)

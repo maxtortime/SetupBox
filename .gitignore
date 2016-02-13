@@ -60,6 +60,8 @@ target/
 
 # Virtualenv directory
 venv/
+venv2/
+venv3/
 
 # Pycharm directory
 .idea/
