@@ -33,7 +33,7 @@ class VcsCoreGit(VcsCore):
         git = self.repo.git
         git.add('.')
         git.commit(msg)
-        #git.push()
+        # git.push() is not executed because git config is not completed
 
     def add(self, filename):
         git = self.repo.git
