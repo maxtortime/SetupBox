@@ -1,3 +1,5 @@
+# Setupbox library file
+libsetupbox.a
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -58,18 +60,16 @@ target/
 
 # Virtualenv directory
 venv/
-<<<<<<< HEAD
-=======
 venv2/
 venv3/
 webenv/
->>>>>>> 888a240... add webenv/ to gitignore
 
 # Pycharm directory
 .idea/
 
 # SQLAlchemy migration directory
 migrations/
+*.swp
 
 # bower components
 bower_components/
