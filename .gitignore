@@ -58,6 +58,12 @@ target/
 
 # Virtualenv directory
 venv/
+<<<<<<< HEAD
+=======
+venv2/
+venv3/
+webenv/
+>>>>>>> 888a240... add webenv/ to gitignore
 
 # Pycharm directory
 .idea/
