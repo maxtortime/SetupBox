@@ -4,7 +4,6 @@ TODO:
 1. 서버가 돌 때 ~/.setupbox 디렉토리가 있나 체크하고 없으면 만들기 --> 완료
 2. 회원가입시 .setupbox 디렉토리 밑에 유저의 이메일로 된 디렉토리 만들기
 """
-#from config import FILES_ROOT
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security

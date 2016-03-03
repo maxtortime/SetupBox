@@ -13,6 +13,13 @@ setup(name='setupbox',
         license="GPLv2",
         packages=['setupbox'],
         install_requires=[
-            'gitpython'
+                'gitpython',
+                'httpie',
+                'flask',
+                'flask-security',
+                'flask-bower',
+                'flask-sqlalchemy',
+                'flask',
+                'pymysql',
             ],
         zip_safe=False)
