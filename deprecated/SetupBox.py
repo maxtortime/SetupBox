@@ -88,9 +88,8 @@ def info():
 @app.route('/files/<path:path>')
 @login_required
 def explorer(path=''):
-    # 유저의 파일을 담는 루트 디렉토리를 정의   
     app.config.update(FILES_ROOT = os.path.join(os.path.expanduser('~/.setupbox/'),current_user.email))
-
+    # 유저의 파일을 담는 루트 디렉토리를 정의
     FILES_ROOT = app.config['FILES_ROOT']
 
     # 회원가입된 유저의 이메일로된 디렉토리가 존재하지 않으면 그 디렉토리를 만든다
@@ -161,7 +160,7 @@ def upload_file():
 
             file.save(path)
 
-            return redirect(url_for('explorer', path=os.path.join(directory_root,filename)))
+            return redirect(url_for('explorer', path=os.path.join(directory_root)))
         else:
             return 'FILE UPLOAD FAILED'
 
@@ -184,7 +183,8 @@ def file_delete():
 
         os.remove(os.path.join(FILES_ROOT,path))
 
-        return redirect('/files'+ directory_root)
+        # 왜 새로고침이 안 되지?
+        return redirect(url_for('explorer',path = os.path.join(directory_root)))
 
 
 if __name__ == '__main__':
