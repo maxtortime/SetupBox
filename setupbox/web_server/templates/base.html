@@ -22,6 +22,9 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
 
+    <!-- Our CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="{{ url_for('bower.static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.contextMenu.min.js') }}"></script>
@@ -44,9 +47,22 @@
                 "delete": {name: "삭제하기", icon: "delete"}
             }
         });
+    });
 
-        $('.files').on('click', function(e){
-            console.log('clicked', this);
+    $(function() {
+        $.contextMenu({
+            selector: '.folders',
+            callback: function(key, options) {
+                //var m = "clicked: " + key;
+                // window.console && console.log(m) || alert(m);
+
+                $.post('/'+key,{ path:$(this.context).attr('id'),
+                    directory_root:$("#folder_path").val() });
+            },
+            items: {
+                "rename": {name: "이름 바꾸기", icon: "rename"},
+                "delete": {name: "삭제하기", icon: "delete"}
+            }
         });
     });
 </script>

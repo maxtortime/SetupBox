@@ -6,7 +6,6 @@
 		{% for chunk in folder.chunks() %}
 			<li>
 				<a href="/files/{{ chunk.path }}">{{ chunk.chunk }}</a>
-				<span class="divider">/</span>
 			</li>
 		{% endfor %}
 	</ul>

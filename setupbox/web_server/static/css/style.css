@@ -1,0 +1,8 @@
+.breadcrumb>li:before {
+    content: ">";
+}
+
+.breadcrumb>li+li:before {
+    content: ">";
+    color: black;
+}
