@@ -5,11 +5,10 @@
         <div class="span6">
             <h3 class="page-header">Results for {{request}}:</h3>
             <ul class="nav nav-tabs nav-stacked">
-            {#{% for folder in folder.folders %}
+            {% for folder in folder.folders %}
                 <li><a href="/files/{{ folder.path }}">{{ folder.name }}</a></li>
-            {% endfor %}#}
+            {% endfor %}
             </ul>
         </div>
-
     </div>
 {% endblock %}

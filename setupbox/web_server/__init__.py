@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
-"""
-TODO:
-1. 서버가 돌 때 ~/.setupbox 디렉토리가 있나 체크하고 없으면 만들기 --> 완료
-2. 회원가입시 .setupbox 디렉토리 밑에 유저의 이메일로 된 디렉토리 만들기
-"""
+
+# TODO: 검색 기능 구현하기, 폴더 지우기, 이름 바꾸기, 파일 이동
+
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for
-from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
 from flask.ext.bower import Bower
+from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
 from flask_security import http_auth_required, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from os import error
 from werkzeug.utils import secure_filename
+import shutil
 
 app = Flask(__name__) # init flask app
 app.config.from_object('config') # config import from config.py
@@ -137,13 +136,6 @@ def create_directory(path = ''):
     return redirect('/files/' + directory_root)
 
 
-# 현재는 모든 확장자를 업로드할 수 있음.
-"""
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-"""
-
 @app.route('/upload', methods=['POST'])
 @login_required
 def upload_file():
@@ -180,8 +172,16 @@ def file_delete():
         path = request.form['path']
         directory_root = request.form['directory_root']
 
-        os.remove(os.path.join(FILES_ROOT,path))
+        path_join = os.path.join(FILES_ROOT, path)
 
+        folder = Folder(FILES_ROOT, path)
+
+        if os.path.isdir(path_join):
+            shutil.rmtree(path_join)
+        else:
+            os.remove(path_join)
+
+        print "설마설마"
         # 왜 새로고침이 안 되지?
         return redirect(url_for('explorer',path = os.path.join(directory_root)))
 
