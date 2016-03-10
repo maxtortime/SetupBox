@@ -1,4 +1,5 @@
 # SetupBox
+[![Build Status](https://travis-ci.org/maxtortime/SetupBox.svg?branch=master)](https://travis-ci.org/maxtortime/SetupBox)
 ## Outline
 *SetupBox* is a useful middleware for implementing own storage cloud. It has multiple APIs for making the service based on version control system. We want to implement below features.
 
