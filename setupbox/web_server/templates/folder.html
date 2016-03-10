@@ -50,7 +50,7 @@
                     <form style='display:-webkit-box;' action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
                         <input type=file name=file>
                         <input class='btn btn-info' type=submit value=Upload>
-                        <input type="hidden" name='directory_root' value="{{folder.path}}" name="directory_root">
+                        <input type="hidden" value="{{folder.path}}" name="directory_root">
                     </form>
                 </div>
             </div>

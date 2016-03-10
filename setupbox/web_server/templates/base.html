@@ -35,9 +35,25 @@
     $(function() {
         $.contextMenu({
             selector: '.files',
-            callback: function(key, options) {
-                $.post('/'+key,{ path:$(this.context).attr('id'),
-                    directory_root:$("#folder_path").val() });
+            callback: function(key) {
+                if (key == "rename") {
+                    var name = prompt("Please input new file name");
+
+                    $.post('/'+key, {
+                        old_name: $(this.context).text(),
+                        new_name: name,
+                        directory_root:$("#folder_path").val(),
+                        path: $(this.context).attr('id')
+                    });
+                }
+                else {
+                    $.post('/'+key, {
+                        path: $(this.context).attr('id'),
+                        directory_root:$("#folder_path").val()
+                    });
+                }
+
+                location.reload();
             },
             items: {
                 "rename": {name: "이름 바꾸기", icon: "edit"},
@@ -49,9 +65,24 @@
     $(function() {
         $.contextMenu({
             selector: '.folders',
-            callback: function(key, options) {
-                $.post('/'+key,{ path:$(this.context).attr('id'),
-                    directory_root:$("#folder_path").val() });
+            callback: function(key) {
+                if (key == "rename") {
+                    var name = prompt("Please input new file name");
+
+                    $.post('/'+key, {
+                        old_name: $(this.context).text(),
+                        new_name: name,
+                        directory_root:$("#folder_path").val(),
+                        path: $(this.context).attr('id')
+                    });
+                }
+                else {
+                    $.post('/'+key,{ path:$(this.context).attr('id'),
+                        directory_root:$("#folder_path").val() });
+                }
+
+                location.reload();
+
             },
             items: {
                 "rename": {name: "이름 바꾸기", icon: "edit"},
@@ -79,7 +110,6 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {% if(current_user.is_authenticated == False) %}
                     <ul class="nav navbar-nav">
-                        {# <li><a href="{{ url_for('security.register') }}">회원가입</a></li> #}
                         <li><a href="{{ url_for('security.login') }}">로그인</a></li>
                         <li><a href="{{ url_for('security.forgot_password') }}">비밀번호 찾기</a></li>
                         <li><a href="{{ url_for('security.register') }}">회원가입</a></li>

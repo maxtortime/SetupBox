@@ -2,6 +2,8 @@
 
 # TODO: 검색 기능 구현하기, 폴더 지우기, 이름 바꾸기, 파일 이동
 
+import shutil
+
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.bower import Bower
@@ -10,7 +12,6 @@ from flask_security import http_auth_required, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from os import error
 from werkzeug.utils import secure_filename
-import shutil
 
 app = Flask(__name__) # init flask app
 app.config.from_object('config') # config import from config.py
@@ -159,8 +160,24 @@ def upload_file():
 @app.route('/rename', methods=['POST'])
 @login_required
 def file_rename():
+    FILES_ROOT = app.config['FILES_ROOT']
+
     if request.method == "POST":
-        return 'rename'
+        new_name = request.form['new_name']
+
+        directory_root = request.form['directory_root']
+        path = request.form['path']
+
+        old_name_path = os.path.join(FILES_ROOT, path)
+
+        new_name_path = path.split('/')[:-1]
+        new_name_path.append(new_name)
+
+        new_name_path = os.path.join(FILES_ROOT, '/'.join(new_name_path))
+
+        os.rename(old_name_path, new_name_path)
+
+        return redirect(url_for('explorer',path = os.path.join(directory_root)))
 
 
 @app.route('/delete', methods=['POST'])
@@ -174,14 +191,11 @@ def file_delete():
 
         path_join = os.path.join(FILES_ROOT, path)
 
-        folder = Folder(FILES_ROOT, path)
-
         if os.path.isdir(path_join):
             shutil.rmtree(path_join)
         else:
             os.remove(path_join)
 
-        # 왜 새로고침이 안 되지?
         return redirect(url_for('explorer',path = os.path.join(directory_root)))
 
 
