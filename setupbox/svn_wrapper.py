@@ -13,15 +13,15 @@ class svn_wrapper(vcs_wrapper):
         self.password = password
         self.transactions = []
 
-        if os.path.exists(setupbox_dir) == False:
-            os.mkdir(setupbox_dir)
+#        if os.path.exists(setupbox_dir) == False:
+#            os.mkdir(setupbox_dir)
         
-        if os.path.exists(tracking_file):
-            with open(tracking_file, 'r') as f:
-                dumps = f.read()
-                self.tracking = json.loads(dumps)
-        else:
-            self.tracking = {}
+#        if os.path.exists(tracking_file):
+#            with open(tracking_file, 'r') as f:
+#                dumps = f.read()
+#                self.tracking = json.loads(dumps)
+#        else:
+#            self.tracking = {}
 
     def flush(self):
         with open(transaction_file, 'wt') as f:
@@ -33,15 +33,16 @@ class svn_wrapper(vcs_wrapper):
         self.do_command('checkout', [url, dest])
 
     def add(self, targets):
-        if os.path.isdir(targets):
-            dentries = os.listdir(targets)
+        # if os.path.isdir(targets):
+            # dentries = os.listdir(targets)
 
-            for dentry in dentries:
-                self.tracking[dentry] = dentry
-        else:
-            self.tracking[targets] = targets
+            # for dentry in dentries:
+              #  self.tracking[dentry] = dentry
+        # else:
+          #  self.tracking[targets] = targets
 
-        self.transactions.append(['add', [targets]])
+        # self.transactions.append(['add', [targets]])
+
         self.do_command('add', [targets])
 
     def rm(self, targets):
@@ -50,7 +51,7 @@ class svn_wrapper(vcs_wrapper):
     def commit(self, msg):
         msg = '-m \"' + msg + '\"'
 
-        self.transactions.append(['commit', [msg]])
+        # self.transactions.append(['commit', [msg]])
         self.do_command('commit', [msg])
 
     def push(self):

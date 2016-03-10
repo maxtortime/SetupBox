@@ -3,16 +3,39 @@ import json, sys
 
 assert len(sys.argv) == 2, "usages: python3 SClient.py user.json"
 
-f = open('user.json', 'r')
-user_data = f.read()
-f.close()
-del f
+with open('user.json', 'r') as f:
+    user_data = f.read()
 
 user_data = json.loads(user_data)
 
+import time
 s = svn_wrapper(user_data['id'], user_data['passwd'])
+is_running = True
 
-s.flush()
+def update():
+    while is_running:
+        s.update()
+
+        time.sleep(1)
+
+def commit():
+    while is_running:
+        s.add('.')
+        s.commit()
+
+        time.sleep(1)
+
+from threading import Thread
+updator = Thread(target=update)
+updator.start()
+
+commiter = Thread(target=commit)
+commiter.start()
+
+updator.join()
+commiter.join()
+
+# s.flush()
 
 # s.rm('./a')
 
