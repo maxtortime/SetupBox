@@ -56,22 +56,3 @@ fi
 echo "make venv..."
 virtualenv venv
 
-#activate virtualenv
-echo "activate venv..."
-source venv/bin/activate
-
-#install requierments
-echo "install requirements..."
-sudo pip install -q -r requirements.txt
-
-#bower install
-cd setupbox/web_server
-bower --silent install
-cd $pwd
-
-#run server
-echo "SERVER IS RUNNING"
-nohup venv/bin/python setupbox/web_server/__init__.py > /dev/null &
-
-#open SetupBox for log-in.
-open http://127.0.0.1:5000
