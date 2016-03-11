@@ -5,10 +5,11 @@
 import shutil
 
 from filesystem import *
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask.ext.bower import Bower
 from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
 from flask_security import http_auth_required, login_required, current_user
+from flask_login import login_user
 from flask_sqlalchemy import SQLAlchemy
 from os import error
 from werkzeug.utils import secure_filename
@@ -69,7 +70,12 @@ def make_dir():
 @app.route('/authTest')
 @http_auth_required
 def authTest():
-    return "LOGIN GOOD"
+    auth_info =  request.authorization
+
+    user = user_datastore.get_user(auth_info['username'])
+
+    login_user(user)
+    return user.get_auth_token()
 
 
 # index view
@@ -108,9 +114,9 @@ def explorer(path=''):
         folder = Folder(FILES_ROOT, my_file.get_path())
 
         if context == None:
-            return render_template('file_unreadable.html', folder=folder)
+           return send_file(os.path.join(FILES_ROOT,path))
 
-        return render_template('file_view.html', text=context['text'], file=my_file, folder=folder)
+        return render_template('file_view.html', text = context['text'], file=my_file, folder=folder)
 
 
 @app.route('/search', methods=['POST'])
@@ -160,18 +166,18 @@ def upload_file():
 @app.route('/rename', methods=['POST'])
 @login_required
 def file_rename():
-    FILES_ROOT = app.config['FILES_ROOT']
+    FILES_ROOT = app.config['FILES_ROOT'] # .setupbox 디렉토리의 절대 경로
 
     if request.method == "POST":
-        new_name = request.form['new_name']
+        new_name = request.form['new_name'] # 파일의 새 이름
 
-        directory_root = request.form['directory_root']
-        path = request.form['path']
+        directory_root = request.form['directory_root'] # 현재 디렉토리
+        path = request.form['path'] # post 요청으로 전달된 파일의 경로
 
         old_name_path = os.path.join(FILES_ROOT, path)
 
-        new_name_path = path.split('/')[:-1]
-        new_name_path.append(new_name)
+        new_name_path = path.split('/')[:-1] # 원래 경로에서 이전 파일 이름만 제거하고 짜름
+        new_name_path.append(new_name) # 새로 받은 이름을 합침
 
         new_name_path = os.path.join(FILES_ROOT, '/'.join(new_name_path))
 
@@ -199,5 +205,15 @@ def file_delete():
         return redirect(url_for('explorer',path = os.path.join(directory_root)))
 
 
+@app.route('/move', methods=['POST'])
+@login_required
+def file_move():
+    pass
+
+
 if __name__ == '__main__':
-    app.run()
+    if not app.config['DEBUG']:
+        app.run(host='0.0.0.0', port=8080)
+    else:
+        app.run()
+

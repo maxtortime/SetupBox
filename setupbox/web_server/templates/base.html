@@ -22,75 +22,20 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
 
-    <!-- Our CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" href="{{ url_for('bower.static', filename='highlightjs/styles/default.css') }}">
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="{{ url_for('bower.static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.contextMenu.min.js') }}"></script>
     <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.ui.position.min.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='highlightjs/highlight.pack.min.js') }}"></script>
 </head>
 <body>
-<script>
-    $(function() {
-        $.contextMenu({
-            selector: '.files',
-            callback: function(key) {
-                if (key == "rename") {
-                    var name = prompt("Please input new file name");
+<script src="{{ url_for('static', filename='js/context_main.js') }}"></script>
 
-                    $.post('/'+key, {
-                        old_name: $(this.context).text(),
-                        new_name: name,
-                        directory_root:$("#folder_path").val(),
-                        path: $(this.context).attr('id')
-                    });
-                }
-                else {
-                    $.post('/'+key, {
-                        path: $(this.context).attr('id'),
-                        directory_root:$("#folder_path").val()
-                    });
-                }
-
-                location.reload();
-            },
-            items: {
-                "rename": {name: "이름 바꾸기", icon: "edit"},
-                "delete": {name: "삭제하기", icon: "delete"}
-            }
-        });
-    });
-
-    $(function() {
-        $.contextMenu({
-            selector: '.folders',
-            callback: function(key) {
-                if (key == "rename") {
-                    var name = prompt("Please input new file name");
-
-                    $.post('/'+key, {
-                        old_name: $(this.context).text(),
-                        new_name: name,
-                        directory_root:$("#folder_path").val(),
-                        path: $(this.context).attr('id')
-                    });
-                }
-                else {
-                    $.post('/'+key,{ path:$(this.context).attr('id'),
-                        directory_root:$("#folder_path").val() });
-                }
-
-                location.reload();
-
-            },
-            items: {
-                "rename": {name: "이름 바꾸기", icon: "edit"},
-                "delete": {name: "삭제하기", icon: "delete"}
-            }
-        });
-    });
-</script>
 <div class="container">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
