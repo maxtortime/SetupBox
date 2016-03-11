@@ -1,52 +1,95 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <div class="row">
-        <div class="span12">
-            <h1 class="page-header">{{ folder.name }}</h1>
-        </div>
+    <!-- Menu buttons -->
+    <div class="breadcrumb" style="margin-bottom:20px;">
+        <button type="button" data-toggle="modal" data-target="#newDirectory" class="btn btn-info btn-default">New Directory</button>
+        <button type="button" data-toggle="modal" data-target="#upload" class="btn btn-success btn-default">Upload</button>
     </div>
+
     {% if folder.chunks %}
         <ul class="breadcrumb">
+            <a href="{{ url_for('explorer') }}">SetupBox</a>
             {% for chunk in folder.chunks() %}
                 <li>
                     <a href="/files/{{ chunk.path }}">{{ chunk.chunk }}</a>
-                    <span class="divider">/</span>
                 </li>
             {% endfor %}
         </ul>
     {% endif %}
-    <div class="row">
-        <div class="span6">
-            <h3 class="page-header">Folders:</h3>
-            <form action="{{ url_for('create_directory') }}" method="post">
-                <label> 디렉토리 이름을 입력하세요
-                <input type="text" name="new_directory_name">
-                </label>
-                <input class='btn btn-primary' type="submit" value="Create directory">
-                <input id="folder_path" type="hidden" value="{{folder.path}}" name="directory_root">
-            </form>
-
-            <form style='display:-webkit-box;' action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
-                <input type=file name=file>
-                <input class='btn btn-info' type=submit value=Upload>
-                <input type="hidden" name='directory_root' value="{{folder.path}}" name="directory_root">
-            </form>
-
-            <ul class="nav nav-tabs nav-stacked">
-                {% for folder in folder.folders %}
-                    <li><a href="/files/{{ folder.path }}"> <img src="{{ url_for('static',filename='img/folder.png') }}" width="20" alt="icon"> {{ folder.name }}</a></li>
-                {% endfor %}
-            </ul>
+    <!-- New Directory Modal -->
+    <div id ="newDirectory" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Making new directory</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('create_directory') }}" method="post">
+                        <label> 디렉토리 이름을 입력하세요
+                            <input type="text" name="new_directory_name">
+                        </label>
+                        <input class='btn btn-primary' type="submit" value="Create directory">
+                        <input id="folder_path" type="hidden" value="{{folder.path}}" name="directory_root">
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="span6">
-            <h3 class="page-header">Files:</h3>
-            <ul class="nav nav-tabs nav-stacked">
-                {% for file in folder.files %}
-                    <li id="{{ file.path }}" class='files'><a href="/files/{{ file.path }}"> <img src="{{ url_for('static',filename='img/'+ file.extension) }}.png" width="20" alt="icon"> {{ file.name }}</a></li>
-                {% endfor %}
-            </ul>
+    </div>
+    <!-- Upload Modal -->
+    <div id ="upload" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!--Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Upload your file</h4>
+                </div>
+                <div class="modal-body">
+                    <form style='display:-webkit-box;' action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
+                        <input type=file name=file>
+                        <input class='btn btn-info' type=submit value=Upload>
+                        <input type="hidden" value="{{folder.path}}" name="directory_root">
+                    </form>
+                </div>
+            </div>
         </div>
+    </div>
 
+    <div id="folderView" class="col-md-12 col-xs-12" style="margin-top:20px;">
+        <table class="table table-bordered table-hover table-striped table-foldersystem">
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Last modification time</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for folder in folder.folders %}
+                <tr>
+                    <td><img src="{{ url_for('static',filename='img/folder.png') }}" width="20" alt="icon"></td>
+                    <td id="{{ folder.path }}" class="folders">
+                        <a href="/files/{{ folder.path }}">{{ folder.name }}</a>
+                    </td>
+                    <td>{{ folder.size }}</td>
+                    <td>{{ folder.date }}</td>
+                </tr>
+            {% endfor %}
+
+            {% for file in folder.files %}
+                <tr>
+                    <td>
+                        <img src="{{ url_for('static',filename='img/'+ file.extension) }}.png" width="20" alt="icon">
+                    </td>
+                    <td id="{{ file.path }}" class='files'><a href="/files/{{ file.path }}">{{ file.name }}</a></td>
+                    <td>{{ file.size }}</td>
+                    <td>{{ file.date }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

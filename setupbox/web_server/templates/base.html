@@ -22,34 +22,20 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" href="{{ url_for('bower.static', filename='highlightjs/styles/default.css') }}">
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="{{ url_for('bower.static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.contextMenu.min.js') }}"></script>
     <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.ui.position.min.js') }}"></script>
+    <script src="{{ url_for('bower.static', filename='highlightjs/highlight.pack.min.js') }}"></script>
 </head>
 <body>
-<script>
-    $(function() {
-        $.contextMenu({
-            selector: '.files',
-            callback: function(key, options) {
-                //var m = "clicked: " + key;
-                // window.console && console.log(m) || alert(m);
+<script src="{{ url_for('static', filename='js/context_main.js') }}"></script>
 
-                $.post('/'+key,{ path:$(this.context).attr('id'),
-                    directory_root:$("#folder_path").val() });
-            },
-            items: {
-                "rename": {name: "이름 바꾸기", icon: "rename"},
-                "delete": {name: "삭제하기", icon: "delete"}
-            }
-        });
-
-        $('.files').on('click', function(e){
-            console.log('clicked', this);
-        });
-    });
-</script>
 <div class="container">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -69,8 +55,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {% if(current_user.is_authenticated == False) %}
                     <ul class="nav navbar-nav">
-                        {# <li><a href="{{ url_for('security.register') }}">회원가입</a></li> #}
                         <li><a href="{{ url_for('security.login') }}">로그인</a></li>
+                        <li><a href="{{ url_for('security.forgot_password') }}">비밀번호 찾기</a></li>
+                        <li><a href="{{ url_for('security.register') }}">회원가입</a></li>
                     </ul>
                 {% else %}
                     <ul class="nav navbar-nav navbar-right">
