@@ -73,3 +73,6 @@ migrations/
 # bower components
 bower_components/
 
+# Database file
+setupbox.db
+
