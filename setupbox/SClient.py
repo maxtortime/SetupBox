@@ -1,5 +1,29 @@
 from svn_wrapper import svn_wrapper
 import json, sys
+import requests
+import time
+from threading import Thread
+import io
+from contextlib import redirect_stdout
+
+def update():
+    while is_running:
+        s.update()
+
+        time.sleep(1)
+
+
+def commit():
+    while is_running:
+        l, is_modified = s.getNewFiles()
+
+        for e in l:
+            s.add(e)
+
+        if is_modified:
+            s.commit('syncing')
+
+        time.sleep(1)
 
 assert len(sys.argv) == 2, "usages: python3 SClient.py user.json"
 
@@ -8,32 +32,29 @@ with open('user.json', 'r') as f:
 
 user_data = json.loads(user_data)
 
-import time
-s = svn_wrapper(user_data['id'], user_data['passwd'])
+resp = requests.get(user_data['auth-url'],
+                    auth=(user_data['id'], user_data['password']))
+
+print(resp.text)
+print(len(resp.text))
+ret = resp.text.split('\n ')[0]
+print(ret)
+assert ret == "success", "Invalid url"
+
+s = svn_wrapper(user_data['id'], user_data['password'])
 is_running = True
 
-def update():
-    while is_running:
-        s.update()
+s.checkout(url=user_data['repo-url'],
+           dest=user_data['repo-dir'])
 
-        time.sleep(1)
+updater = Thread(target=update)
+updater.start()
 
-def commit():
-    while is_running:
-        s.add('.')
-        s.commit()
+committer = Thread(target=commit)
+committer.start()
 
-        time.sleep(1)
-
-from threading import Thread
-updator = Thread(target=update)
-updator.start()
-
-commiter = Thread(target=commit)
-commiter.start()
-
-updator.join()
-commiter.join()
+updater.join()
+committer.join()
 
 # s.flush()
 
@@ -42,8 +63,6 @@ commiter.join()
 # s.update('jainersoer@ajou.ac.kr', '7004545a')
 
 '''
-s.checkout(url='https://github.com/jafffy/fast-forward-test.git',
-           dest='./test')
            '''
 
 # s.add('./b')

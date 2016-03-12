@@ -2,6 +2,7 @@ import os
 from vcs_wrapper import vcs_wrapper
 import sqlite3, json
 import pickle
+from subprocess import Popen, PIPE
 
 setupbox_dir = './.sb'
 tracking_file = setupbox_dir + '/tracking.json'
@@ -29,8 +30,34 @@ class svn_wrapper(vcs_wrapper):
             f.write(dumps)
 
     def checkout(self, url, dest):
-        url = url + '/trunk'
+        # url = url + '/trunk'
         self.do_command('checkout', [url, dest])
+        os.chdir(dest)
+
+    def getNewFiles(self):
+        p = self.do_command('stat', [], True)
+
+        assert len(p.stderr.read()) == 0
+
+        output = str(p.stdout.read())
+
+        output = output.split('\\n')
+
+        result = []
+        modified = False
+
+        for line in output:
+            temp = line.split()
+            if len(temp) < 2:
+                continue
+
+            if temp[0] == '?':
+                result.append(temp[1])
+
+            if not modified:
+                modified = True
+
+        return result, modified
 
     def add(self, targets):
         # if os.path.isdir(targets):
@@ -46,7 +73,7 @@ class svn_wrapper(vcs_wrapper):
         self.do_command('add', [targets])
 
     def rm(self, targets):
-        self.do_command('rm', [targets])
+        self.do_command('rm', [targets], True)
 
     def commit(self, msg):
         msg = '-m \"' + msg + '\"'
@@ -58,17 +85,26 @@ class svn_wrapper(vcs_wrapper):
         pass
 
     def update(self):
-        self.do_command('update', [])
+        self.do_command('update', [], True)
 
     def revert(self):
         pass
 
-    def do_command(self, command, parameters=[]):
+    def cleanup(self):
+        self.do_command('cleanup', [], True)
+
+    def do_command(self, command, parameters=[], simple=False):
         username = self.username
         password = self.password
 
-        vcs = 'svn '
-        vcs_command = command + ' '
+        vcs = 'svn'
+
+        if simple:
+            p = Popen([vcs, command], stdout=PIPE, stderr=PIPE)
+            return p
+
+        vcs += ' '
+        vcs_command = command + " "
 
         parameter_str = ''
 
@@ -80,13 +116,12 @@ class svn_wrapper(vcs_wrapper):
         if username is None:
             username = ''
         else:
-            username = '--username ' + username + ' '
+            username = '--username ' + username + " "
 
         if password is None:
             password = ''
         else:
-            password = '--password ' + password + ' '
-
+            password = '--password ' + password + " "
 
         command = vcs + vcs_command + parameter_str + options + username + password
 
