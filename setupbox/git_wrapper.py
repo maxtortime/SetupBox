@@ -1,5 +1,6 @@
 import os
 from vcs_wrapper import vcs_wrapper
+from subprocess import Popen, PIPE
 
 class git_wrapper(vcs_wrapper):
     def __init__(self, username, password):
@@ -7,7 +8,8 @@ class git_wrapper(vcs_wrapper):
         self.password = password
 
     def checkout(self, url, dest):
-        self.do_command('clone', [url, dest]) 
+        self.do_command('clone', [url, dest])
+        os.chdir(dest)
 
     def add(self, targets):
         self.do_command('add', [targets])
@@ -32,14 +34,21 @@ class git_wrapper(vcs_wrapper):
         username = self.username
         password = self.password
 
-        vcs = 'git '
-        vcs_command = command + ' '
+        command_list = []
 
-        parameter_str = ''
+        vcs = 'git'
+        command_list.append(vcs)
+        vcs_command = command
+        command_list.append(vcs_command)
 
-        for p in parameter_str:
-            parameter_str = parameter_str + p + ' '
+        # parameter_str = ''
 
-        command = vcs + vcs_command + parameter_str
+        for p in parameters:
+            command_list.append(p)
+            # parameter_str += p + ' '
 
-        os.system(command)
+        # final_command = vcs_command + parameter_str
+
+        p = Popen(command_list, stdout=PIPE, stderr=PIPE)
+        print(p.stderr.read())
+        # os.system(final_command)

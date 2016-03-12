@@ -1,10 +1,9 @@
 from svn_wrapper import svn_wrapper
+from git_wrapper import git_wrapper
 import json, sys
 import requests
 import time
 from threading import Thread
-import io
-from contextlib import redirect_stdout
 
 def update():
     while is_running:
@@ -12,8 +11,15 @@ def update():
 
         time.sleep(1)
 
+def git_commit():
+    while is_running:
+        s.add('.')
+        s.commit('syncing')
+        s.push()
 
-def commit():
+        time.sleep(5)
+
+def svn_commit():
     while is_running:
         l, is_modified = s.getNewFiles()
 
@@ -41,7 +47,8 @@ ret = resp.text.split('\n ')[0]
 print(ret)
 assert ret == "success", "Invalid url"
 
-s = svn_wrapper(user_data['id'], user_data['password'])
+s = git_wrapper(user_data['id'], user_data['password'])
+    # svn_wrapper(user_data['id'], user_data['password'])
 is_running = True
 
 s.checkout(url=user_data['repo-url'],
@@ -50,23 +57,9 @@ s.checkout(url=user_data['repo-url'],
 updater = Thread(target=update)
 updater.start()
 
-committer = Thread(target=commit)
+committer = Thread(target=git_commit)
 committer.start()
 
 updater.join()
 committer.join()
 
-# s.flush()
-
-# s.rm('./a')
-
-# s.update('jainersoer@ajou.ac.kr', '7004545a')
-
-'''
-           '''
-
-# s.add('./b')
-
-# s.commit('test', 'jainersoer@ajou.ac.kr', '7004545a')
-
-# s.push()
