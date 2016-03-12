@@ -1,21 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-    <!-- Menu buttons -->
-    <div class="breadcrumb" style="margin-bottom:20px;">
-        <button type="button" data-toggle="modal" data-target="#newDirectory" class="btn btn-info btn-default">New Directory</button>
-        <button type="button" data-toggle="modal" data-target="#upload" class="btn btn-success btn-default">Upload</button>
-    </div>
-
-    {% if folder.chunks %}
-        <ul class="breadcrumb">
-            <a href="{{ url_for('explorer') }}">SetupBox</a>
-            {% for chunk in folder.chunks() %}
-                <li>
-                    <a href="/files/{{ chunk.path }}">{{ chunk.chunk }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
     <!-- New Directory Modal -->
     <div id ="newDirectory" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -57,10 +41,23 @@
         </div>
     </div>
 
-    <div id="folderView" class="col-md-12 col-xs-12" style="margin-top:20px;">
-        <table class="table table-bordered table-hover table-striped table-foldersystem">
+    <div>
+        {% if folder.chunks %}
+            <ul class="breadcrumb">
+                <a href="{{ url_for('explorer') }}">SetupBox</a>
+                {% for chunk in folder.chunks() %}
+                    <li>
+                        <a href="/files/{{ chunk.path }}">{{ chunk.chunk }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div id="folderView" class="col-md-12 col-xs-12" style="padding:0px;">
+        <table class="table table-bordered table-foldersystem">
             <thead>
-            <tr>
+            <tr class="active">
                 <th>Type</th>
                 <th>Name</th>
                 <th>Size</th>
@@ -69,8 +66,8 @@
             </thead>
             <tbody>
             {% for folder in folder.folders %}
-                <tr>
-                    <td><img src="{{ url_for('static',filename='img/folder.png') }}" width="20" alt="icon"></td>
+                <tr class="warning">
+                    <td><img src="{{ url_for('static',filename='img/ext/folder.png') }}" width="20" alt="icon"></td>
                     <td id="{{ folder.path }}" class="folders">
                         <a href="/files/{{ folder.path }}">{{ folder.name }}</a>
                     </td>
@@ -80,9 +77,9 @@
             {% endfor %}
 
             {% for file in folder.files %}
-                <tr>
+                <tr class="info">
                     <td>
-                        <img src="{{ url_for('static',filename='img/'+ file.extension) }}.png" width="20" alt="icon">
+                        <img src="{{ url_for('static',filename='img/ext/'+ file.extension) }}.png" width="20" alt="icon">
                     </td>
                     <td id="{{ file.path }}" class='files'><a href="/files/{{ file.path }}">{{ file.name }}</a></td>
                     <td>{{ file.size }}</td>

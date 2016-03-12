@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask.ext.bower import Bower
 from flask.ext.login import user_logged_in
 from flask.ext.mail import Mail
-from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security, current_user
+from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security, current_user, user_registered
 from flask_login import login_user
 from flask_security import http_auth_required, login_required
 from flask_sqlalchemy import SQLAlchemy
@@ -26,7 +26,6 @@ bower = Bower(app)
 db = SQLAlchemy(app)
 
 # Define mail
-
 mail = Mail(app)
 
 # Define models
@@ -72,20 +71,11 @@ def set_file_root():
 
     return file_root
 
-# .setupbox 디렉토리가 없으면 만들 것
-@app.before_first_request
-def make_dir():
-    # 유저들의 파일이 담길 폴더 경로
-    app_path = os.path.expanduser('~/.setupbox')
-
-    if not os.path.exists(app_path):
-        os.mkdir(app_path)
-
 # for linux client auth
 @app.route('/authTest')
 @http_auth_required
 def authTest():
-    auth_info =  request.authorization
+    auth_info = request.authorization
 
     user = user_datastore.get_user(auth_info['username'])
 
@@ -95,7 +85,7 @@ def authTest():
 # index view
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return redirect(url_for('security.login'))
 
 
 @app.route('/explorer')
@@ -147,8 +137,7 @@ def create_directory(path = ''):
     except error:
         print error.args
 
-    print directory_root
-    return redirect('/files/' + directory_root)
+    return redirect(url_for('explorer', path = os.path.join(directory_root,dirname)))
 
 
 @app.route('/upload', methods=['POST'])

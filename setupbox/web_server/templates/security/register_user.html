@@ -1,8 +1,6 @@
-{% extends 'base.html' %}
-{% from "security/_macros.html" import render_field_with_errors, render_field %}
-{% block content %}
-    {% include "security/_messages.html" %}
-    <h1>Register</h1>
+{% extends 'layout.html' %}
+{% block form %}
+    Please register to SetupBox
     <form action="{{ url_for_security('register') }}" method="POST" name="register_user_form">
         {{ register_user_form.hidden_tag() }}
         {{ render_field_with_errors(register_user_form.email) }}
@@ -10,7 +8,14 @@
         {% if register_user_form.password_confirm %}
             {{ render_field_with_errors(register_user_form.password_confirm) }}
         {% endif %}
-        {{ render_field(register_user_form.submit) }}
+        {{ render_field(register_user_form.submit, class="btn btn-default") }}
     </form>
-    {% include "security/_menu.html" %}
+    <ul>
+        <li>You are already user of SetupBox? Please <a href="{{ url_for('security.login') }}">Login</a></li>
+        <li>If you <a href="{{ url_for('security.forgot_password') }}">forgot your password?</a></li>
+    </ul>
+    </div>
+    <div class="form-top-right">
+        <i class="fa fa-key"></i>
+    </div>
 {% endblock %}
