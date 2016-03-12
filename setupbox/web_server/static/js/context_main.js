@@ -8,10 +8,10 @@ $(function() {
             if (key == "rename") {
                 var name = prompt("Please input new file name");
 
-                $.post('/'+key, {
+                $.post('/' + key, {
                     old_name: $(this.context).text(),
                     new_name: name,
-                    directory_root:$("#folder_path").val(),
+                    directory_root: $("#folder_path").val(),
                     path: $(this.context).attr('id')
                 });
             }
@@ -27,7 +27,6 @@ $(function() {
         items: {
             "rename": {name: "이름 바꾸기", icon: "edit"},
             "delete": {name: "삭제하기", icon: "delete"}
-            //"move": {name: "이동하기", icon: "move"}
         }
     });
 });
@@ -66,7 +65,6 @@ $(function() {
         items: {
             "rename": {name: "이름 바꾸기", icon: "edit"},
             "delete": {name: "삭제하기", icon: "delete"}
-            //"move": {name: "이동하기", icon: "move"}
         }
     });
 });
