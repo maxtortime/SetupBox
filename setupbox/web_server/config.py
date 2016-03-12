@@ -6,8 +6,12 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 DEBUG = True # flask Debugging mode
+path = os.path.join(os.path.expanduser('~/.setupbox/'))
 
-FILES_ROOT = os.path.join(os.path.expanduser('~/.setupbox/'))
+if not os.path.isdir(path):
+    os.mkdir(path)
+
+FILES_ROOT = path
 
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 587
