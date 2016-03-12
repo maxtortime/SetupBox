@@ -23,6 +23,7 @@
   ],
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "jQuery-contextMenu": "^2.1.1"
+    "jQuery-contextMenu": "^2.1.1",
+    "highlightjs": "^9.2.0"
   }
 }

@@ -1,23 +1,15 @@
 # SetupBox
+[![Build Status](https://travis-ci.org/maxtortime/SetupBox.svg?branch=master)](https://travis-ci.org/maxtortime/SetupBox)
 ## Outline
 *SetupBox* is a useful middleware for implementing own storage cloud. It has multiple APIs for making the service based on version control system. We want to implement below features.
 
 ## LICENSE and [AUTHORS](https://github.com/maxtortime/SetupBox/blob/master/AUTHORS)
 Please see files on the repository.
 
-## Features (Now developing...)
-1. Binary parsers
-2. Modules
-3. File system
-4. Database
-5. Transaction management
-6. GUI
-7. Web
-8. Auth
-9. Installation
-10. Administration
-11. Test
-12. VCS backend (git, svn, mercurial, custom...)
+## Installation Guide
+Installation Guide is on Wiki page.
+
+Visit [here](https://github.com/maxtortime/SetupBox/wiki/Installation-Guide).
 
 ## Contribution guide
 SetupBox needs your help. You can confirm [contribtuon guide](https://github.com/maxtortime/SetupBox/wiki/Contribution-guide) on wiki or just try **pull request**!

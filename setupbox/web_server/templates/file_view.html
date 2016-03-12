@@ -1,18 +1,17 @@
 {% extends "base.html" %}
-
 {% block content %}
-	{% if folder.chunks %}
-	<ul class="breadcrumb">
-		{% for chunk in folder.chunks() %}
-			<li>
-				<a href="/files/{{ chunk.path }}">{{ chunk.chunk }}</a>
-				<span class="divider">/</span>
-			</li>
-		{% endfor %}
-	</ul>
-	{% endif %}
-    <h2>{{ file }}</h2>
-    <div class="row">
-        <div style="white-space:pre;">{{ text }}</div>
-    </div>
+    {% if folder.chunks %}
+        <ul class="breadcrumb">
+            <a href="{{ url_for('explorer') }}">SetupBox</a>
+            {% for chunk in folder.chunks() %}
+                <li>
+                    <a href="/files/{{ chunk.path }}">{{ chunk.chunk }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <h4>{{ file }}</h4>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <pre><code class="{{ file.extension }}">{{ text }}</code></pre>
 {% endblock %}

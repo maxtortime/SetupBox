@@ -1,16 +1,42 @@
 # -*- coding: utf-8 -*-
 from genericpath import isfile
 import os
-from os.path import join, basename, splitext, isdir, dirname
+from os.path import join, basename, splitext, isdir, dirname, getmtime, getsize, sep
 from action import View
 import string
+import time
 
+def size_conversion(size):
+        K = 1000
+
+        if size > K:
+            KB = str(size / K) + "KB"
+            return KB
+
+        elif size > pow(K,2):
+            MB = str(size / pow(K,2)) + "MB"
+            return MB
+
+        elif size > pow(K,3):
+            GB = str(size / pow(K,3)) + "GB"
+            return GB
+
+        elif size > pow(K,4):
+            TB = str(size / pow(K,4)) + "TB"
+            return TB
+
+        elif size < K:
+            return str(size) + "B"
+        else:
+            return "Too Large"
 
 class Node(object):
     def __init__(self, root, path):
         splitedPath = string.split(path,"/")
-        self.path = os.path.sep.join(splitedPath)
+        self.path = sep.join(splitedPath)
         self.root = root
+        self.size = size_conversion(getsize(os.path.join(root, path)))
+        self.date = time.ctime(getmtime(os.path.join(root, path)))
         self._basename = basename(self.path)
 
     def __unicode__(self):
@@ -23,6 +49,7 @@ class Node(object):
         action = action_class(self)
         return action.apply()
 
+
 class File(Node):
     avaliable_actions = [View, ]
     def __unicode__(self):
@@ -30,7 +57,7 @@ class File(Node):
 
     @property
     def extension(self):
-        return splitext(self._basename)[1]
+        return splitext(self._basename)[1][1:]
 
     @property
     def name(self):
@@ -38,6 +65,7 @@ class File(Node):
 
     def get_path(self):
         return dirname(self.path)
+
 
 class Folder(Node):
     
