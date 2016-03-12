@@ -68,7 +68,11 @@ def authTest():
     user = user_datastore.get_user(auth_info['username'])
 
     login_user(user)
-    return user.get_auth_token()
+
+    if user.get_auth_token():
+        return 'success'
+    else:
+        return 'fail'
 
 
 # Index view
