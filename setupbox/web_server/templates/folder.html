@@ -10,7 +10,7 @@
                     <h4>Making new directory</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url_for('create_directory') }}" method="post">
+                    <form action="{{ url_for('create_directory') }}" method="post" id="mdform">
                         <label> 디렉토리 이름을 입력하세요
                             <input type="text" name="new_directory_name">
                         </label>
@@ -29,9 +29,10 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4>Upload your file</h4>
+
                 </div>
                 <div class="modal-body">
-                    <form style='display:-webkit-box;' action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
+                    <form id="uploadform" style='display:-webkit-box;' action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
                         <input type=file name=file>
                         <input class='btn btn-info' type=submit value=Upload>
                         <input type="hidden" value="{{folder.path}}" name="directory_root">
@@ -66,7 +67,7 @@
             </thead>
             <tbody>
             {% for folder in folder.folders %}
-                <tr class="warning">
+                <tr class="folders_row">
                     <td><img src="{{ url_for('static',filename='img/ext/folder.png') }}" width="20" alt="icon"></td>
                     <td id="{{ folder.path }}" class="folders">
                         <a href="/files/{{ folder.path }}">{{ folder.name }}</a>
@@ -77,7 +78,7 @@
             {% endfor %}
 
             {% for file in folder.files %}
-                <tr class="info">
+                <tr class="files_row">
                     <td>
                         <img src="{{ url_for('static',filename='img/ext/'+ file.extension) }}.png" width="20" alt="icon">
                     </td>

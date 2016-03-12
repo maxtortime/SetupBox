@@ -5,8 +5,23 @@
 	-o-transition: all .3s; -moz-transition: all .3s; -webkit-transition: all .3s; -ms-transition: all .3s; transition: all .3s;
 }
 
+.navbar-brand {
+	padding: 19px 22px;
+}
+
+.folders_row {
+	background-color: #F2F1F1;
+}
+
+.files_row {
+	background-color: #FFFFFF;
+}
 input {
 	width: 300px;
+}
+
+button, html input[type=button], input[type=reset], input[type=submit] {
+	width: 150px;
 }
 
 label {
@@ -24,7 +39,7 @@ label[for="remember"] {
 
 .breadcrumb {
 	text-align: left;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 .breadcrumb>li:before {
     content: ">";
@@ -51,7 +66,7 @@ pre {
 strong { font-weight: 500; }
 
 a, a:hover, a:focus {
-	color: #00cc66;
+	color: #06b6ef;
 	font-weight:bold;
 	text-decoration: underline;
     -o-transition: all .3s; -moz-transition: all .3s; -webkit-transition: all .3s; -ms-transition: all .3s; transition: all .3s;

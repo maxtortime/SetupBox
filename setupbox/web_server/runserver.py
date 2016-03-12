@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
-
-# TODO: 검색 기능 구현하기, 폴더 지우기, 이름 바꾸기, 파일 이동
-
+# TODO: 디렉토리 겹쳐지는 문제 해결해야 함
+import hashlib
 import shutil
+import urllib
 
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask.ext.bower import Bower
 from flask.ext.login import user_logged_in
 from flask.ext.mail import Mail
-from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security, current_user, user_registered
+from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security, current_user
 from flask_login import login_user
 from flask_security import http_auth_required, login_required
 from flask_sqlalchemy import SQLAlchemy
 from os import error
 from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__) # init flask app
 app.config.from_object('config') # config import from config.py
@@ -95,6 +96,14 @@ def explorer(path=''):
     # 유저의 파일을 담는 루트 디렉토리를 정의
     FILES_ROOT = set_file_root()
 
+    email = current_user.email
+    size = 20
+    default = url_for('static',filename='ico/favicon.png')
+
+    # construct the url
+    gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+    gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+
     # 회원가입된 유저의 이메일로된 디렉토리가 존재하지 않으면 그 디렉토리를 만든다
     if not os.path.exists(FILES_ROOT):
         os.mkdir(FILES_ROOT)
@@ -105,7 +114,7 @@ def explorer(path=''):
     if os.path.isdir(path_join):
         folder = Folder(FILES_ROOT, path)
         folder.read()
-        return render_template('folder.html', folder=folder)
+        return render_template('folder.html', gravatar_url=gravatar_url, folder=folder)
     else:
         my_file = File(FILES_ROOT, path)
         context = my_file.apply_action(View)
@@ -114,7 +123,7 @@ def explorer(path=''):
         if context == None:
            return send_file(os.path.join(FILES_ROOT,path))
 
-        return render_template('file_view.html', text = context['text'], file=my_file, folder=folder)
+        return render_template('file_view.html', gravatar_url=gravatar_url, text = context['text'], file=my_file, folder=folder)
 
 
 @app.route('/search', methods=['POST'])
@@ -147,17 +156,16 @@ def upload_file():
 
     if request.method == "POST":
         file = request.files['file']
+        directory_root = request.form['directory_root']
 
         if file:
             filename = secure_filename(file.filename)
-            directory_root = request.form['directory_root']
+
             path = os.path.join(FILES_ROOT,directory_root,filename)
 
             file.save(path)
 
-            return redirect(url_for('explorer', path=os.path.join(directory_root)))
-        else:
-            return 'FILE UPLOAD FAILED'
+        return redirect(url_for('explorer', path=os.path.join(directory_root)))
 
 
 @app.route('/rename', methods=['POST'])
