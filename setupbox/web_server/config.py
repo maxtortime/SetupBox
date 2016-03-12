@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-import sys
+import sys, os
 # for korean character
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 DEBUG = True # flask Debugging mode
+
+FILES_ROOT = os.path.join(os.path.expanduser('~/.setupbox/'))
 
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 587

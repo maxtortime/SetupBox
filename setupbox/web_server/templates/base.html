@@ -9,29 +9,7 @@
     <meta name="author" content="SetupBox">
 
     <title>SetupBox</title>
-
-    <!-- stylesheets -->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="{{ url_for('bower.static', filename='bootstrap/dist/css/bootstrap.min.css') }}">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="{{ url_for('bower.static', filename='bootstrap/dist/css/bootstrap-theme.min.css') }}">
-
-    <link rel="stylesheet" href="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.contextMenu.min.css') }}">
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <!-- Our CSS -->
-    <link rel="stylesheet" href="{{ url_for('bower.static', filename='highlightjs/styles/default.css') }}">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="{{ url_for('bower.static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.contextMenu.min.js') }}"></script>
-    <script src="{{ url_for('bower.static', filename='jQuery-contextMenu/dist/jquery.ui.position.min.js') }}"></script>
-    <script src="{{ url_for('bower.static', filename='highlightjs/highlight.pack.min.js') }}"></script>
+    {% include "dependencies.html" %}
 </head>
 <body>
 <script src="{{ url_for('static', filename='js/context_main.js') }}"></script>
@@ -48,22 +26,35 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('index') }}">SetupBox</a>
+                <a class="navbar-brand" href="{{ url_for('index') }}">Web file manager - SetupBox</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {% if(current_user.is_authenticated == False) %}
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav navbar-right">
                         <li><a href="{{ url_for('security.login') }}">로그인</a></li>
                         <li><a href="{{ url_for('security.forgot_password') }}">비밀번호 찾기</a></li>
                         <li><a href="{{ url_for('security.register') }}">회원가입</a></li>
                     </ul>
                 {% else %}
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{{ url_for('explorer') }}">탐색기</a></li>
-                        <li><a href="{{ url_for('security.change_password') }}">비밀번호 바꾸기</a></li>
-                        <li><a href="{{ url_for('security.logout') }}">로그아웃</a></li>
+                        <li><a data-toggle="modal" data-target="#newDirectory">
+                            <i class="material-icons">create_new_folder</i>
+                        </a>
+                        </li>
+                        <li><a data-toggle="modal" data-target="#upload">
+                            <i class="material-icons">cloud_upload</i></a></li>
+
+                        <li class="dropdown">
+                            <a id="auth" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <img src="{{ gravatar_url }}" alt="Auth"><span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="auth">
+                                <li><a href="{{ url_for('security.change_password') }}">비밀번호 바꾸기</a></li>
+                                <li><a href="{{ url_for('security.logout') }}">로그아웃</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 {% endif %}
             </div><!-- /.navbar-collapse -->

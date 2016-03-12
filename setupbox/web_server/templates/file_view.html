@@ -1,6 +1,4 @@
 {% extends "base.html" %}
-
-
 {% block content %}
     {% if folder.chunks %}
         <ul class="breadcrumb">
@@ -16,6 +14,4 @@
     <script>hljs.initHighlightingOnLoad();</script>
 
     <pre><code class="{{ file.extension }}">{{ text }}</code></pre>
-
-
 {% endblock %}

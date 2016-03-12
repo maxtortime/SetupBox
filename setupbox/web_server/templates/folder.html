@@ -1,21 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-    <!-- Menu buttons -->
-    <div class="breadcrumb" style="margin-bottom:20px;">
-        <button type="button" data-toggle="modal" data-target="#newDirectory" class="btn btn-info btn-default">New Directory</button>
-        <button type="button" data-toggle="modal" data-target="#upload" class="btn btn-success btn-default">Upload</button>
-    </div>
-
-    {% if folder.chunks %}
-        <ul class="breadcrumb">
-            <a href="{{ url_for('explorer') }}">SetupBox</a>
-            {% for chunk in folder.chunks() %}
-                <li>
-                    <a href="/files/{{ chunk.path }}">{{ chunk.chunk }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
     <!-- New Directory Modal -->
     <div id ="newDirectory" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -26,7 +10,7 @@
                     <h4>Making new directory</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url_for('create_directory') }}" method="post">
+                    <form action="{{ url_for('create_directory') }}" method="post" id="mdform">
                         <label> 디렉토리 이름을 입력하세요
                             <input type="text" name="new_directory_name">
                         </label>
@@ -45,9 +29,10 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4>Upload your file</h4>
+
                 </div>
                 <div class="modal-body">
-                    <form style='display:-webkit-box;' action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
+                    <form id="uploadform" style='display:-webkit-box;' action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
                         <input type=file name=file>
                         <input class='btn btn-info' type=submit value=Upload>
                         <input type="hidden" value="{{folder.path}}" name="directory_root">
@@ -57,10 +42,23 @@
         </div>
     </div>
 
-    <div id="folderView" class="col-md-12 col-xs-12" style="margin-top:20px;">
-        <table class="table table-bordered table-hover table-striped table-foldersystem">
+    <div>
+        {% if folder.chunks %}
+            <ul class="breadcrumb">
+                <a href="{{ url_for('explorer') }}">SetupBox</a>
+                {% for chunk in folder.chunks() %}
+                    <li>
+                        <a href="/files/{{ chunk.path }}">{{ chunk.chunk }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div id="folderView" class="col-md-12 col-xs-12" style="padding:0px;">
+        <table class="table table-bordered table-foldersystem">
             <thead>
-            <tr>
+            <tr class="active">
                 <th>Type</th>
                 <th>Name</th>
                 <th>Size</th>
@@ -69,8 +67,8 @@
             </thead>
             <tbody>
             {% for folder in folder.folders %}
-                <tr>
-                    <td><img src="{{ url_for('static',filename='img/folder.png') }}" width="20" alt="icon"></td>
+                <tr class="folders_row">
+                    <td><img src="{{ url_for('static',filename='img/ext/folder.png') }}" width="20" alt="icon"></td>
                     <td id="{{ folder.path }}" class="folders">
                         <a href="/files/{{ folder.path }}">{{ folder.name }}</a>
                     </td>
@@ -80,9 +78,9 @@
             {% endfor %}
 
             {% for file in folder.files %}
-                <tr>
+                <tr class="files_row">
                     <td>
-                        <img src="{{ url_for('static',filename='img/'+ file.extension) }}.png" width="20" alt="icon">
+                        <img src="{{ url_for('static',filename='img/ext/'+ file.extension) }}.png" width="20" alt="icon">
                     </td>
                     <td id="{{ file.path }}" class='files'><a href="/files/{{ file.path }}">{{ file.name }}</a></td>
                     <td>{{ file.size }}</td>

@@ -1,0 +1,33 @@
+{% include 'dependencies.html' %}
+{% from "security/_macros.html" import render_field_with_errors, render_field %}
+<!-- Top content -->
+<div class="top-content">
+    <div class="inner-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 text">
+                    <h1>Welcome to <strong>SetupBox</strong></h1>
+                    <div class="description">
+                        <p>
+                            <a id="homepage" href="http://maxtortime.github.io/SetupBox">SetupBox</a> is a useful Middleware for implementing own storage cloud.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 form-box">
+                    <div class="form-top">
+                        <div class="form-top-left">
+                            {% block form %}
+                            {% endblock %}
+                        </div>
+                        <div class="form-top-right">
+                            <i class="fa fa-key"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
