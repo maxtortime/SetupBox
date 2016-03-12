@@ -9,7 +9,6 @@ import sys
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask.ext.bower import Bower
-from flask.ext.login import user_logged_in
 from flask.ext.mail import Mail
 from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security, current_user, user_registered
 from flask_login import login_user
@@ -60,29 +59,13 @@ security = Security(app, user_datastore)
 
 FILES_ROOT = app.config["FILES_ROOT"]
 
-root_dir_of_user = ''
-
-@app.before_first_request
-def init():
-    if current_user.is_authenticated:
-        global root_dir_of_user
-        root_dir_of_user = os.path.join(FILES_ROOT, current_user.email)
-
-@user_logged_in.connect_via(app)
-def when_user_logged_in(app, user):
-    global root_dir_of_user
-    root_dir_of_user = os.path.join(FILES_ROOT, user.email)
-
 
 @user_registered.connect_via(app)
 def when_user_registered(app, user):
-    global root_dir_of_user
+    path = os.path.join(FILES_ROOT, user.email)
 
-    root_dir_of_user = os.path.join(FILES_ROOT, user.email)
-
-    if isdir(root_dir_of_user):
-        os.mkdir(root_dir_of_user)
-
+    if isdir(path):
+        os.mkdir(path)
 
 # for linux client auth
 @app.route('/authTest')
@@ -102,10 +85,16 @@ def index():
     return redirect(url_for('security.login'))
 
 
+def set_dir(user):
+    return os.path.join(FILES_ROOT, user.email)
+
+
 @app.route('/explorer')
 @app.route('/files/<path:path>')
 @login_required
 def explorer(path=''):
+    root_dir_of_user = set_dir(current_user)
+
     # 유저의 파일을 담는 루트 디렉토리를 정의
     email = current_user.email
     size = 20
@@ -136,6 +125,7 @@ def explorer(path=''):
 @app.route('/search', methods=['POST'])
 @login_required
 def search():
+    root_dir_of_user = set_dir(current_user)
     q = request.form['q']
     return render_template('search.html', request = q)
 
@@ -144,6 +134,7 @@ def search():
 @app.route('/<path:path>/new_directory', methods=["POST"])
 @login_required
 def create_directory(path = ''):
+    root_dir_of_user = set_dir(current_user)
     dirname = request.form["new_directory_name"]
     directory_root = request.form["directory_root"]
 
@@ -158,6 +149,8 @@ def create_directory(path = ''):
 @app.route('/upload', methods=['POST'])
 @login_required
 def upload_file():
+    root_dir_of_user = set_dir(current_user)
+
     if request.method == "POST":
         file = request.files['file']
         directory_root = request.form['directory_root']
@@ -169,12 +162,16 @@ def upload_file():
 
             file.save(path)
 
-        return redirect(url_for('explorer', path=os.path.join(directory_root)))
+            return redirect(url_for('explorer', path=os.path.join(directory_root,filename)))
+        else:
+            return redirect(url_for('explorer'))
 
 
 @app.route('/rename', methods=['POST'])
 @login_required
 def file_rename():
+    root_dir_of_user = set_dir(current_user)
+
     if request.method == "POST":
         new_name = request.form['new_name'] # 파일의 새 이름
 
@@ -196,6 +193,8 @@ def file_rename():
 @app.route('/delete', methods=['POST'])
 @login_required
 def file_delete():
+    root_dir_of_user = set_dir(current_user)
+
     if request.method == 'POST':
         path = request.form['path']
         directory_root = request.form['directory_root']
@@ -216,8 +215,6 @@ if __name__ == '__main__':
         quit()
 
     if sys.argv[1] == "develop":
-        app.run()
+        app.run(threaded=True)
     elif sys.argv[1] == "deploy":
-        app.run(host="0.0.0.0", port=int(8080))
-
-
+        app.run(host="0.0.0.0", port=int(8080),threaded=True)
