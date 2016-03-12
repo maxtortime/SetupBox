@@ -59,14 +59,6 @@ security = Security(app, user_datastore)
 
 FILES_ROOT = app.config["FILES_ROOT"]
 
-
-@user_registered.connect_via(app)
-def when_user_registered(app, user):
-    path = os.path.join(FILES_ROOT, user.email)
-
-    if isdir(path):
-        os.mkdir(path)
-
 # for linux client auth
 @app.route('/authTest')
 @http_auth_required
@@ -95,6 +87,9 @@ def set_dir(user):
 def explorer(path=''):
     root_dir_of_user = set_dir(current_user)
 
+    if not isdir(root_dir_of_user):
+        os.mkdir(root_dir_of_user)
+
     # 유저의 파일을 담는 루트 디렉토리를 정의
     email = current_user.email
     size = 20
@@ -122,14 +117,6 @@ def explorer(path=''):
         return render_template('file_view.html', gravatar_url=gravatar_url, text = context['text'], file=my_file, folder=folder)
 
 
-@app.route('/search', methods=['POST'])
-@login_required
-def search():
-    root_dir_of_user = set_dir(current_user)
-    q = request.form['q']
-    return render_template('search.html', request = q)
-
-
 @app.route('/new_directory', methods=["POST"])
 @app.route('/<path:path>/new_directory', methods=["POST"])
 @login_required
@@ -143,7 +130,10 @@ def create_directory(path = ''):
     except error:
         print error.args
 
-    return redirect(url_for('explorer', path = os.path.join(directory_root,dirname)))
+    if len(directory_root) == 0:
+        return redirect(url_for('explorer'))
+    else:
+        return redirect(url_for('explorer', path=os.path.join(directory_root)))
 
 
 @app.route('/upload', methods=['POST'])
@@ -162,9 +152,10 @@ def upload_file():
 
             file.save(path)
 
-            return redirect(url_for('explorer', path=os.path.join(directory_root,filename)))
-        else:
+        if len(directory_root) == 0:
             return redirect(url_for('explorer'))
+        else:
+            return redirect(url_for('explorer', path=os.path.join(directory_root)))
 
 
 @app.route('/rename', methods=['POST'])
@@ -187,7 +178,10 @@ def file_rename():
 
         os.rename(old_name_path, new_name_path)
 
-        return redirect(url_for('explorer',path = os.path.join(directory_root)))
+        if len(directory_root) == 0:
+            return redirect(url_for('explorer'))
+        else:
+            return redirect(url_for('explorer', path=os.path.join(directory_root)))
 
 
 @app.route('/delete', methods=['POST'])
@@ -206,7 +200,10 @@ def file_delete():
         else:
             os.remove(path_join)
 
-        return redirect(url_for('explorer',path = os.path.join(directory_root)))
+        if len(directory_root) == 0:
+            return redirect(url_for('explorer'))
+        else:
+            return redirect(url_for('explorer', path=os.path.join(directory_root)))
 
 
 if __name__ == '__main__':
