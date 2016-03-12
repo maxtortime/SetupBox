@@ -31,9 +31,6 @@ class git_wrapper(vcs_wrapper):
         pass
 
     def do_command(self, command, parameters=[]):
-        username = self.username
-        password = self.password
-
         command_list = []
 
         vcs = 'git'
@@ -41,14 +38,7 @@ class git_wrapper(vcs_wrapper):
         vcs_command = command
         command_list.append(vcs_command)
 
-        # parameter_str = ''
-
         for p in parameters:
             command_list.append(p)
-            # parameter_str += p + ' '
-
-        # final_command = vcs_command + parameter_str
 
         p = Popen(command_list, stdout=PIPE, stderr=PIPE)
-        print(p.stderr.read())
-        # os.system(final_command)

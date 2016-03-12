@@ -5,6 +5,15 @@ import requests
 import time
 from threading import Thread
 
+def common_update():
+    while is_running:
+        s.update()
+        s.add('.')
+        s.commit('syncing')
+        s.push()
+
+        time.sleep(5)
+
 def update():
     while is_running:
         s.update()
@@ -54,6 +63,9 @@ is_running = True
 s.checkout(url=user_data['repo-url'],
            dest=user_data['repo-dir'])
 
+common_update()
+
+'''
 updater = Thread(target=update)
 updater.start()
 
@@ -62,4 +74,4 @@ committer.start()
 
 updater.join()
 committer.join()
-
+'''
