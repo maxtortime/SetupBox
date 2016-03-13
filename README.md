@@ -6,7 +6,7 @@
 ## What SetupBox uses
 Libraries and open sources that SetupBox uses are on Wiki page.
 
-Visit [here](https://github.com/maxtortime/SetupBox/wiki/For-COPYING).
+Visit [here](https://github.com/maxtortime/SetupBox/wiki/COPYING).
 
 ## Installation Guide
 Installation Guide is on Wiki page.
