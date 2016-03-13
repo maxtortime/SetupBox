@@ -77,4 +77,6 @@ bower_components/
 # Database file
 setupbox.db
 
+# user data
 user.json
+setupbox/user.json
