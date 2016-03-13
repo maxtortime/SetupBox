@@ -1,9 +1,10 @@
-from svn_wrapper import svn_wrapper
-from git_wrapper import git_wrapper
-import json, sys
-import requests
+import json
+import sys
 import time
-from threading import Thread
+
+import requests
+from git_wrapper import git_wrapper
+
 
 def common_update():
     while is_running:

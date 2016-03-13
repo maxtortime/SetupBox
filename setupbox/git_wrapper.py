@@ -1,5 +1,5 @@
 import os
-from vcs_wrapper import vcs_wrapper
+from setupbox import vcs_wrapper
 from subprocess import Popen, PIPE
 
 class git_wrapper(vcs_wrapper):

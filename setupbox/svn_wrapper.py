@@ -1,8 +1,8 @@
-import os
-from vcs_wrapper import vcs_wrapper
-import sqlite3, json
-import pickle
+import json
 from subprocess import Popen, PIPE
+
+import os
+from setupbox import vcs_wrapper
 
 setupbox_dir = './.sb'
 tracking_file = setupbox_dir + '/tracking.json'

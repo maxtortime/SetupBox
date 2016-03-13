@@ -1,5 +1,4 @@
-import os
-from vcs_wrapper import vcs_wrapper
+from setupbox import vcs_wrapper
 
 class sb_wrapper(vcs_wrapper):
     """description of class"""
