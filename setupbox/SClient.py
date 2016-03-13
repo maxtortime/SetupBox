@@ -16,6 +16,7 @@ def common_update():
         time.sleep(10)
 
 
+
 assert len(sys.argv) == 2, "usages: python3 SClient.py user.json"
 
 with open('user.json', 'r') as f:
@@ -28,7 +29,7 @@ resp = requests.get(user_data['auth-url'],
 
 print(resp.text)
 print(len(resp.text))
-ret = resp.text.split('\n ')[0]
+ret = resp.text.split('\\n ')[0]
 print(ret)
 assert ret == "success", "Invalid url"
 
