@@ -1,7 +1,10 @@
 SetupBox
 ========
+|Build Status| 
 
-|Build Status| ## Outline *SetupBox* is a useful middleware for
+Outline 
+------------------
+*SetupBox* is a useful middleware for
 implementing own storage cloud. It has multiple APIs for making the
 service based on version control system.
 
