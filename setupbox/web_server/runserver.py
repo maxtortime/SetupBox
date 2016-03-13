@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
-# TODO: 디렉토리 겹쳐지는 문제 해결해야 함
 import hashlib
 import shutil
-import urllib
-
 import sys
+import urllib
 
 from filesystem import *
 from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask.ext.bower import Bower
 from flask.ext.mail import Mail
-from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security, current_user, user_registered
+from flask.ext.security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security, current_user
 from flask_login import login_user
 from flask_security import http_auth_required, login_required
 from flask_sqlalchemy import SQLAlchemy
 from os import error
 from werkzeug.utils import secure_filename
-
 
 app = Flask(__name__) # init flask app
 app.config.from_object('config') # config import from config.py
@@ -80,7 +77,7 @@ def authTest():
 def index():
     return redirect(url_for('security.login'))
 
-
+# for set correct directory for current user
 def set_dir(user):
     return os.path.join(FILES_ROOT, user.email)
 
@@ -89,17 +86,17 @@ def set_dir(user):
 @app.route('/files/<path:path>')
 @login_required
 def explorer(path=''):
+    # 유저의 파일을 담는 루트 디렉토리를 정의
     root_dir_of_user = set_dir(current_user)
 
     if not isdir(root_dir_of_user):
         os.mkdir(root_dir_of_user)
 
-    # 유저의 파일을 담는 루트 디렉토리를 정의
+    # gravatar url 만들기
     email = current_user.email
     size = 20
     default = url_for('static',filename='ico/favicon.png')
 
-    # construct the url
     gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
     gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
 
@@ -211,11 +208,10 @@ def file_delete():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print "Please input mode"
-        quit()
+    assert len(sys.argv) > 2, "Usage: python runserver.py develop"
 
     if sys.argv[1] == "develop":
         app.run(threaded=True)
     elif sys.argv[1] == "deploy":
+        app.config.update(DEBUG=False)
         app.run(host="0.0.0.0", port=int(8080),threaded=True)
