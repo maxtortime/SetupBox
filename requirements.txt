@@ -32,7 +32,6 @@ python-editor==0.5
 pytz==2015.7
 requests==2.9.1
 requests-toolbelt==0.6.0
--e git+git@github.com:maxtortime/SetupBox.git@b46bd23483b20a57aa6307998cb5fd42fb27630b#egg=setupbox
 six==1.10.0
 smmap==0.9.0
 snowballstemmer==1.2.1

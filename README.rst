@@ -1,41 +1,35 @@
-Outline
--------
+SetupBox
+========
 
-*SetupBox* is a useful middleware for implementing own storage cloud. It
-has multiple APIs for making the service based on version control
-system. We want to implement below features.
+|Build Status| ## Outline *SetupBox* is a useful middleware for
+implementing own storage cloud. It has multiple APIs for making the
+service based on version control system.
 
-LICENSE and `AUTHORS`_
-----------------------
+What SetupBox uses
+------------------
 
-Please see files on the repository.
+Libraries and open sources that SetupBox uses are on Wiki page.
 
-Features (Now developing…)
---------------------------
+Visit `here`_.
 
-#. Binary parsers
-#. Modules
-#. File system
-#. Database
-#. Transaction management
-#. GUI
-#. Web
-#. Auth
-#. Installation
-#. Administration
-#. Test
-#. VCS backend (git, svn, mercurial, custom…)
+Installation Guide
+------------------
+
+Installation Guide is on Wiki page.
+
+Visit
+`here <https://github.com/maxtortime/SetupBox/wiki/Installation-Guide>`__.
 
 Contribution guide
 ------------------
 
-SetupBox needs your help. You can confirm `contribtuon guide`_ on wiki
+SetupBox needs your help. You can confirm `contribution guide`_ on wiki
 or just try **pull request**!
 
 Demo version
 ------------
 
-Now, We’re preparing demo version. It will become a web application.
+http://fast0.ajou.ac.kr:8080
 
 `Wiki`_
 -------
@@ -44,13 +38,9 @@ We have wiki for our productivity and sharing information. Now, only
 collaborators can edit wiki. If you want to add some useful information
 on wiki, please register issue about that.
 
-Deprecated version
-------------------
-
-We have a deprecated version of SetupBox because we changed our design.
-But you can confirm deprecated codes on the `‘deprecated’`_ directory’
-
-.. _AUTHORS: https://github.com/maxtortime/SetupBox/blob/master/AUTHORS
-.. _contribtuon guide: https://github.com/maxtortime/SetupBox/wiki/Contribution-guide
+.. _here: https://github.com/maxtortime/SetupBox/wiki/For-COPYING
+.. _contribution guide: https://github.com/maxtortime/SetupBox/wiki/Contribution-guide
 .. _Wiki: https://github.com/maxtortime/SetupBox/wiki
-.. _‘deprecated’: https://github.com/maxtortime/SetupBox/tree/master/deprecated
+
+.. |Build Status| image:: https://travis-ci.org/maxtortime/SetupBox.svg?branch=master
+   :target: https://travis-ci.org/maxtortime/SetupBox
