@@ -1,44 +1,20 @@
 from svn_wrapper import svn_wrapper
-from git_wrapper import git_wrapper
 import json, sys
 import requests
 import time
-from threading import Thread
 
 def common_update():
     while is_running:
         s.update()
-        s.add('.')
-        s.commit('syncing')
-        s.push()
+        time.sleep(10)
 
-        time.sleep(5)
-
-def update():
-    while is_running:
-        s.update()
-
-        time.sleep(1)
-
-def git_commit():
-    while is_running:
-        s.add('.')
-        s.commit('syncing')
-        s.push()
-
-        time.sleep(5)
-
-def svn_commit():
-    while is_running:
-        l, is_modified = s.getNewFiles()
-
-        for e in l:
-            s.add(e)
-
-        if is_modified:
+        o = s.add('.')
+        if o == "new":
             s.commit('syncing')
+            s.push()
 
-        time.sleep(1)
+        time.sleep(10)
+
 
 assert len(sys.argv) == 2, "usages: python3 SClient.py user.json"
 
@@ -56,8 +32,7 @@ ret = resp.text.split('\n ')[0]
 print(ret)
 assert ret == "success", "Invalid url"
 
-s = # git_wrapper(user_data['id'], user_data['password'])
-    svn_wrapper(user_data['id'], user_data['password'])
+s = svn_wrapper(user_data['id'], user_data['password'])
 is_running = True
 
 s.checkout(url=user_data['repo-url'],

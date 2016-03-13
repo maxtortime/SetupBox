@@ -163,33 +163,30 @@ def get_modified_files(origin, target) -> list:
         return []
 
 
-def get_new_files(origin, target) -> list:
-    assert isinstance(origin, str)
-    assert isinstance(target, str)
-
-    ispath1dir = os.path.isdir(origin)
-    ispath2dir = os.path.isdir(target)
+def get_new_files(cur, path1, path2) -> list:
+    ispath1dir = os.path.isdir(path1)
+    ispath2dir = os.path.isdir(path2)
 
     if ispath1dir and ispath2dir:
         ret = []
 
-        origin_files = set(os.listdir(origin))
-        target_files = set(os.listdir(target))
+        origin_files = set(os.listdir(path1))
+        target_files = set(os.listdir(path2))
 
         common = origin_files.intersection(target_files)
 
         for e in common:
-            origin_path = absjoin(origin, e)
-            target_path = absjoin(target, e)
+            origin_path = absjoin(path1, e)
+            target_path = absjoin(path2, e)
 
-            output = get_new_files(origin_path, target_path)
+            output = get_new_files(absjoin(cur, e), origin_path, target_path)
 
             if output is not None:
                 ret += output
 
         files_target_only = list(target_files.difference(common))
 
-        files_target_only = list(map(absjoin, [target]*len(files_target_only), files_target_only))
+        files_target_only = list(map(absjoin, [cur]*len(files_target_only), files_target_only))
 
         ret += files_target_only
 

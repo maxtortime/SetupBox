@@ -68,10 +68,3 @@ def commit(msg):
     copy_files_to(new_commit_folder, fs().head_folder)
 
 
-initfs('./transaction_test')
-
-vcs = VCS()
-head = None
-
-add('.')
-commit('asdf')
