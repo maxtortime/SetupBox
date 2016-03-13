@@ -79,4 +79,6 @@ setupbox.db
 
 # user data
 user.json
-setupbox/user.json
+
+web_server/static/.setupbox.git
+web_server/static/maxtortime@gmail.com.git
