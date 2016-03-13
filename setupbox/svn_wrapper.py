@@ -1,88 +1,94 @@
-import json
+import uuid
+from shutil import rmtree
 from subprocess import Popen, PIPE
+
+import transaction_manager as tm
+from fs import clear_folder, copy_files_to, \
+    get_new_files, fs, is_in_preset_dirs,\
+    absjoin
+from vcs import VCS
 
 import os
 from setupbox import vcs_wrapper
 
-setupbox_dir = './.sb'
-tracking_file = setupbox_dir + '/tracking.json'
-transaction_file = setupbox_dir + '/transaction.txt'
 
 class svn_wrapper(vcs_wrapper):
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.transactions = []
 
-#        if os.path.exists(setupbox_dir) == False:
-#            os.mkdir(setupbox_dir)
-        
-#        if os.path.exists(tracking_file):
-#            with open(tracking_file, 'r') as f:
-#                dumps = f.read()
-#                self.tracking = json.loads(dumps)
-#        else:
-#            self.tracking = {}
-
-    def flush(self):
-        with open(transaction_file, 'wt') as f:
-            dumps = json.dumps(self.transactions)
-            f.write(dumps)
+        self.vcs = None
+        self.head = None
 
     def checkout(self, url, dest):
-        # url = url + '/trunk'
         self.do_command('checkout', [url, dest])
         os.chdir(dest)
+        tm.initfs(dest)
 
-    def getNewFiles(self):
-        p = self.do_command('stat', [], True)
+        fs().preset_dirs.add(absjoin(dest, '.svn'))
 
-        assert len(p.stderr.read()) == 0
+        self.vcs = VCS()
+        self.head = None
 
-        output = str(p.stdout.read())
+        self.add('.', True)
+        self.commit('init')
 
-        output = output.split('\\n')
+    def add(self, targets, dont_svn_add=False):
+        if is_in_preset_dirs(targets):
+            return
 
-        result = []
-        modified = False
+        clear_folder(fs().stage_folder)
+        copy_files_to(targets, fs().stage_folder)
+        l = get_new_files(fs().current_dir,
+                          fs().head_folder, fs().stage_folder)
 
-        for line in output:
-            temp = line.split()
-            if len(temp) < 2:
-                continue
+        print('new=files', l)
 
-            if temp[0] == '?':
-                result.append(temp[1])
-
-            if not modified:
-                modified = True
-
-        return result, modified
-
-    def add(self, targets):
-        # if os.path.isdir(targets):
-            # dentries = os.listdir(targets)
-
-            # for dentry in dentries:
-              #  self.tracking[dentry] = dentry
-        # else:
-          #  self.tracking[targets] = targets
-
-        # self.transactions.append(['add', [targets]])
-
-        self.do_command('add', [targets])
+        if len(l) > 0 and not dont_svn_add:
+            self.do_command('add', l)
+            return "new"
+        return None
 
     def rm(self, targets):
+        if is_in_preset_dirs(targets):
+            return
+
+        rmtree(absjoin(fs().stage_folder, targets))
+        rmtree(absjoin(fs().current_dir, targets))
+
         self.do_command('rm', [targets], True)
 
     def commit(self, msg):
-        msg = '-m \"' + msg + '\"'
+        new_uuid = str(uuid.uuid1())
 
-        # self.transactions.append(['commit', [msg]])
-        self.do_command('commit', [msg])
+        if self.head is None:
+            old_uuid = new_uuid
+        else:
+            old_uuid = self.head.id_pointer
+
+        assert isinstance(old_uuid, str)
+        self.head = self.vcs.insert(id_pointer=new_uuid,
+                                    next_pointer=new_uuid,
+                                    prev_pointer=old_uuid,
+                                    msg=msg)
+
+        self.vcs.update(id_pointer=old_uuid,
+                        next_pointer=new_uuid)
+
+        new_commit_folder = absjoin(fs().commit_folder, str(new_uuid))
+
+        if not os.path.lexists(new_commit_folder):
+            os.mkdir(new_commit_folder)
+        else:
+            clear_folder(new_commit_folder)
+
+        copy_files_to(fs().stage_folder, new_commit_folder)
+        clear_folder(fs().stage_folder)
+        clear_folder(fs().head_folder)
+        copy_files_to(new_commit_folder, fs().head_folder)
 
     def push(self):
-        pass
+        self.do_command('commit', ['-m', self.head.msg if self.head is None else '\"default message\"'])
 
     def update(self):
         self.do_command('update', [], True)
@@ -124,5 +130,7 @@ class svn_wrapper(vcs_wrapper):
             password = '--password ' + password + " "
 
         command = vcs + vcs_command + parameter_str + options + username + password
+
+        print(command)
 
         os.system(command)
