@@ -56,8 +56,8 @@ ret = resp.text.split('\n ')[0]
 print(ret)
 assert ret == "success", "Invalid url"
 
-s = git_wrapper(user_data['id'], user_data['password'])
-    # svn_wrapper(user_data['id'], user_data['password'])
+s = # git_wrapper(user_data['id'], user_data['password'])
+    svn_wrapper(user_data['id'], user_data['password'])
 is_running = True
 
 s.checkout(url=user_data['repo-url'],
@@ -65,13 +65,3 @@ s.checkout(url=user_data['repo-url'],
 
 common_update()
 
-'''
-updater = Thread(target=update)
-updater.start()
-
-committer = Thread(target=git_commit)
-committer.start()
-
-updater.join()
-committer.join()
-'''
