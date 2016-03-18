@@ -17,7 +17,7 @@ Visit [here](https://github.com/maxtortime/SetupBox/wiki/Installation-Guide).
 SetupBox needs your help. You can confirm [contribution guide](https://github.com/maxtortime/SetupBox/wiki/Contribution-guide) on wiki or just try **pull request**!
 
 ## Demo version
-http://fast0.ajou.ac.kr:5050/
+http://52.79.81.62:8080/login
 
 ## [Wiki](https://github.com/maxtortime/SetupBox/wiki)
 We have wiki for our productivity and sharing information. Now, only collaborators can edit wiki. If you want to add some useful information on wiki, please register issue about that.
