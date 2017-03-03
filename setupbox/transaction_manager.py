@@ -7,6 +7,8 @@ from fs import clear_folder, copy_files_to, \
     absjoin
 from os.path import join
 
+from setupbox import vcs
+
 
 def add(target):
     '''
