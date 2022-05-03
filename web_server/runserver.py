@@ -113,7 +113,7 @@ def explorer(path=''):
         folder = Folder(root_dir_of_user, my_file.get_path())
 
         if context == None:
-           return send_file(os.path.join(root_dir_of_user,path))
+           return send_file(safe_join(root_dir_of_user,path))
 
         return render_template('file_view.html', gravatar_url=gravatar_url, text = context['text'], file=my_file, folder=folder)
 
